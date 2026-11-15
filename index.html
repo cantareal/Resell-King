@@ -1233,7 +1233,7 @@
         </div>
       </div>
       <div class="quick-chips">
-        <button type="button" class="chip-btn" id="chipCritical" onclick="toggleCriticalFilter()">🚨 Solo critici (30+ gg)</button>
+        <button type="button" class="chip-btn" id="chipCritical" onclick="toggleCriticalFilter()">🚨 Solo critici</button>
         <button type="button" class="chip-btn" id="chipFresh" onclick="toggleFreshFilter()">✨ Freschi (≤7 gg)</button>
       </div>
       </div>
@@ -1257,7 +1257,7 @@
     </div>
     <div class="period-summary"><h3>📅 Riepilogo settimana</h3><div class="ps-grid" id="weekSummaryGrid"></div></div>
     <div class="period-summary"><h3>🗓️ Riepilogo mese</h3><div class="ps-grid" id="monthSummaryGrid"></div></div>
-    <div class="chart-container" style="height:auto;min-height:0;padding:12px;"><h3 style="margin:0 0 6px;">Come leggere i grafici</h3><p style="font-size:0.75rem;color:var(--text-muted);margin:0;line-height:1.4;font-weight:600;">Netto = vendita − acquisto − fee. Capitale bloccato = stock 30+ gg. In attesa = venduto ma non in cassa.</p></div>
+    <div class="chart-container" style="height:auto;min-height:0;padding:12px;"><h3 style="margin:0 0 6px;">Come leggere i grafici</h3><p style="font-size:0.75rem;color:var(--text-muted);margin:0;line-height:1.4;font-weight:600;">Netto = vendita − acquisto − fee. Capitale bloccato = stock fermo (soglia impostazioni). In attesa = venduto ma non in cassa.</p></div>
     <div class="chart-container">
       <h3>Tempo Medio di Vendita (Giorni) per Categoria</h3>
       <canvas id="leadTimeChart"></canvas>
@@ -2489,7 +2489,7 @@
 
 
     /* RK HELPERS */
-    const APP_VERSION = "5.1.0";
+    const APP_VERSION = "5.2.0";
     const SETTINGS_KEY = "resell_king_settings_v1";
     const VERSION_SEEN_KEY = "resell_king_version_seen";
 
@@ -2628,8 +2628,8 @@
     function parseItDate(dStr){ if(!dStr)return null; const p=String(dStr).split("/"); if(p.length!==3)return null; return new Date(+p[2], +p[1]-1, +p[0]); }
     function isInCurrentWeek(dStr){ const d=parseItDate(dStr); if(!d||isNaN(d))return false; return getWeekId(d)===getWeekId(new Date()); }
     function isInCurrentMonth(dStr){ const d=parseItDate(dStr); if(!d||isNaN(d))return false; const n=new Date(); return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear(); }
-    function weeklyMissionContext(){ let soldWeek=0,addedWeek=0,critSoldWeek=0; db.forEach(i=>{ if(i.s==="sold"&&isInCurrentWeek(i.soldDate||i.d)){ soldWeek++; try{ const a=parseItDate(i.d),b=parseItDate(i.soldDate||i.d); if(a&&b&&Math.round((b-a)/86400000)>=30) critSoldWeek++; }catch(e){} } if(isInCurrentWeek(i.d)) addedWeek++; }); let backupWeek=0; try{ const ts=parseInt(localStorage.getItem(LAST_BACKUP_KEY)||"0",10)||0; if(ts&&(Date.now()-ts)<7*86400000) backupWeek=1; }catch(e){} return {soldWeek,addedWeek,critSoldWeek,backupWeek}; }
-    function renderWeeklyMissions(){ const box=document.getElementById("weeklyMissionsList"); if(!box)return; const ctx=weeklyMissionContext(); const defs=[{title:"Chiudi 1 vendita",target:1,p:ctx.soldWeek},{title:"Aggiungi 2 oggetti",target:2,p:ctx.addedWeek},{title:"Backup con foto",target:1,p:ctx.backupWeek},{title:"Vendi 1 pezzo critico (30+ gg)",target:1,p:ctx.critSoldWeek}]; box.innerHTML=defs.map(m=>{ const p=Math.min(m.target,m.p||0); const done=p>=m.target; return `<div class="mission-row${done?" done":""}"><span>${done?"✅ ":"▫️ "}${m.title}</span><span class="mission-prog">${p}/${m.target}</span></div>`; }).join(""); }
+    function weeklyMissionContext(){ let soldWeek=0,addedWeek=0,critSoldWeek=0; db.forEach(i=>{ if(i.s==="sold"&&isInCurrentWeek(i.soldDate||i.d)){ soldWeek++; try{ const a=parseItDate(i.d),b=parseItDate(i.soldDate||i.d); if(a&&b&&Math.round((b-a)/86400000)>=getCriticalDays()) critSoldWeek++; }catch(e){} } if(isInCurrentWeek(i.d)) addedWeek++; }); let backupWeek=0; try{ const ts=parseInt(localStorage.getItem(LAST_BACKUP_KEY)||"0",10)||0; if(ts&&(Date.now()-ts)<7*86400000) backupWeek=1; }catch(e){} return {soldWeek,addedWeek,critSoldWeek,backupWeek}; }
+    function renderWeeklyMissions(){ const box=document.getElementById("weeklyMissionsList"); if(!box)return; const ctx=weeklyMissionContext(); const defs=[{title:"Chiudi 1 vendita",target:1,p:ctx.soldWeek},{title:"Incassa 1 vendita in attesa",target:1,p:ctx.collectedWeek||0},{title:"Backup con foto",target:1,p:ctx.backupWeek},{title:"Vendi 1 pezzo fermo ("+getCriticalDays()+"+ gg)",target:1,p:ctx.critSoldWeek}]; box.innerHTML=defs.map(m=>{ const p=Math.min(m.target,m.p||0); const done=p>=m.target; return `<div class="mission-row${done?" done":""}"><span>${done?"✅ ":"▫️ "}${m.title}</span><span class="mission-prog">${p}/${m.target}</span></div>`; }).join(""); }
     function periodStats(filterFn){ let sales=0,profit=0,count=0,expensesSum=0; db.forEach(i=>{ if(i.s!=="sold")return; const d=i.soldDate||i.d; if(!filterFn(d))return; count++; sales+=parseFloat(i.sp)||0; profit+=getItemNetProfit(i); }); expenses.forEach(e=>{ if(filterFn(e.date)) expensesSum+=parseFloat(e.amount)||0; }); return {sales,profit,count,expensesSum,net:profit-expensesSum}; }
     function fillPeriodGrid(id,st){ const el=document.getElementById(id); if(!el)return; const cell=(l,v)=>`<div class="ps-item"><div class="ps-l">${l}</div><div class="ps-v">${v}</div></div>`; el.innerHTML=[cell("Vendite",st.count),cell("Incassi lordo","€"+st.sales.toFixed(2).replace(".",",")),cell("Netto pezzi","€"+st.profit.toFixed(2).replace(".",",")),cell("Spese (solo cassa)","€"+st.expensesSum.toFixed(2).replace(".",","))].join(""); }
     function renderPeriodSummaries(){ fillPeriodGrid("weekSummaryGrid", periodStats(isInCurrentWeek)); fillPeriodGrid("monthSummaryGrid", periodStats(isInCurrentMonth)); }
@@ -3487,7 +3487,7 @@
       setCount("countExp", expenses.length);
       const critN = db.filter(i => i.s === "stock" && daysInStock(i) >= 30).length;
       const chip = document.getElementById("chipCritical");
-      if (chip) chip.textContent = critN > 0 ? ("🚨 Critici " + critN + " (30+ gg)") : "🚨 Solo critici (30+ gg)";
+      if (chip) chip.textContent = critN > 0 ? ("🚨 Critici " + critN + " (" + getCriticalDays() + "+ gg)") : ("🚨 Solo critici (" + getCriticalDays() + "+ gg)");
       document.getElementById("statMonthCount").innerText = `${monthSoldCount} vendit${monthSoldCount === 1 ? 'a' : 'e'}`;
 
       if (currentStatusFilter === "STATS" || currentStatusFilter === "TROPHIES") return;
@@ -3663,7 +3663,7 @@
 
       if (!filtered.length) {
         if (filterCriticalOnly) {
-          listEl.innerHTML = emptyStateHtml("✨", "Nessun critico", "Nessun oggetto fermo da 30+ giorni. Ottimo.", "Vedi tutto lo stock", "filterCriticalOnly=false;updateFilterChips();setStatusFilter('stock')");
+          listEl.innerHTML = emptyStateHtml("✨", "Nessun critico", "Nessun oggetto fermo oltre la soglia. Ottimo.", "Vedi tutto lo stock", "filterCriticalOnly=false;updateFilterChips();setStatusFilter('stock')");
         } else if (filterFreshOnly) {
           listEl.innerHTML = emptyStateHtml("📦", "Nessun pezzo fresco", "Nessun oggetto in stock da ≤7 giorni.", "Vedi tutto", "filterFreshOnly=false;updateFilterChips();renderApp()");
         } else if (db.length === 0 && (currentStatusFilter === "ALL" || currentStatusFilter === "stock")) {
@@ -4241,7 +4241,7 @@
       document.getElementById("sheetItemTitle").innerText = item.t;
       document.getElementById("sheetSellPrice").value = item.sp > 0 ? item.sp : "";
       document.getElementById("sheetSellFee").value = item.fee > 0 ? item.fee : "";
-      const payCb = document.getElementById("sheetPayoutReceived"); if (payCb) payCb.checked = false;
+      const payCb = document.getElementById("sheetPayoutReceived"); if (payCb) { payCb.checked = false; payCb.dataset.userTouched = "0"; }
       document.getElementById("sellSheet").classList.remove("hidden");
     }
 
@@ -4250,11 +4250,19 @@
       activeSheetItemId = null;
     }
 
+    (function bindSheetPayoutTouch() {
+      const cb = document.getElementById("sheetPayoutReceived");
+      if (!cb || cb.dataset.boundTouch) return;
+      cb.dataset.boundTouch = "1";
+      cb.addEventListener("change", () => { cb.dataset.userTouched = "1"; });
+    })();
+
     function prepareAndSell(platform) {
       const cb = document.getElementById("sheetPayoutReceived");
-      // Se l'utente non ha toccato la spunta, usa default piattaforma; se l'ha cambiata, rispettala.
-      // Semplicità: al tap piattaforma applica sempre il default piattaforma (esplicito e prevedibile).
-      if (cb) cb.checked = isPayoutReceivedDefault(platform);
+      // Default piattaforma solo se l'utente non ha toccato la spunta
+      if (cb && cb.dataset.userTouched !== "1") {
+        cb.checked = isPayoutReceivedDefault(platform);
+      }
       confirmSheetSell(platform);
     }
 
@@ -4299,20 +4307,25 @@
     }
 
     function sanitizeItems(arr) {
-      return arr.filter(x => x && typeof x === "object").map((x, i) => ({
-        id: safeId(x.id, String(Date.now()) + "-" + i),
-        t: String(x.t || "Senza nome"),
-        c: String(x.c || "Altro"),
-        src: String(x.src || ""),
-        bp: parseFloat(x.bp) || 0,
-        sp: parseFloat(x.sp) || 0,
-        fee: parseFloat(x.fee) || 0,
-        s: x.s === "sold" ? "sold" : "stock",
-        d: String(x.d || todayFormatted()),
-        soldPlatform: String(x.soldPlatform || ""),
-        soldDate: String(x.soldDate || ""),
-        n: String(x.n || "")
-      }));
+      return arr.filter(x => x && typeof x === "object").map((x, i) => {
+        const s = x.s === "sold" ? "sold" : "stock";
+        return {
+          id: safeId(x.id, String(Date.now()) + "-" + i),
+          t: String(x.t || "Senza nome"),
+          c: String(x.c || "Altro"),
+          src: String(x.src || ""),
+          bp: parseFloat(x.bp) || 0,
+          sp: parseFloat(x.sp) || 0,
+          fee: parseFloat(x.fee) || 0,
+          s: s,
+          d: String(x.d || todayFormatted()),
+          soldPlatform: String(x.soldPlatform || ""),
+          soldDate: String(x.soldDate || ""),
+          n: String(x.n || ""),
+          listed: s === "stock" ? !!x.listed : false,
+          pendingPayout: s === "sold" ? !!x.pendingPayout : false
+        };
+      });
     }
 
     function sanitizeExpenses(arr) {
@@ -4410,6 +4423,12 @@
         if (troph.flags && troph.flags.backupPhotos) {
           localStorage.setItem("trophy_flag_backup_photos", "1");
         }
+      }
+      if (parsed.settings && typeof parsed.settings === "object") {
+        try { saveSettings({ ...loadSettings(), ...parsed.settings, payoutDefaults: { ...loadSettings().payoutDefaults, ...(parsed.settings.payoutDefaults || {}) } }); } catch (e) {}
+      }
+      if (Array.isArray(parsed.customCategories)) {
+        saveCustomCategories(parsed.customCategories.map(String).filter(Boolean));
       }
       saveData();
       try {
@@ -4509,7 +4528,12 @@
         claimed: loadClaimed(),
         flags: { backupPhotos: localStorage.getItem("trophy_flag_backup_photos") === "1" }
       };
-      const payload = { version: 4, db, expenses, adjustments, profile, trophies };
+      const payload = {
+        version: 5,
+        db, expenses, adjustments, profile, trophies,
+        settings: loadSettings(),
+        customCategories: loadCustomCategories()
+      };
       if (withPhotos) payload.photos = await getAllPhotosIDB();
       const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
