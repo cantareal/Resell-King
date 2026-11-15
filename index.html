@@ -620,9 +620,63 @@
     .btn-modal-copy { background: rgba(139, 92, 246, 0.18); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.4); }
     .btn-modal-delete { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); }
 
-    .bottom-sheet-overlay { position: fixed; inset: 0; background: var(--modal-overlay); z-index: 200; display: flex; align-items: flex-end; justify-content: center; }
+    .bottom-sheet-overlay {
+      position: fixed; inset: 0; background: var(--modal-overlay); z-index: 200;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 0; overscroll-behavior: contain;
+    }
     .bottom-sheet-overlay.hidden { display: none; }
-    .bottom-sheet-content { background: var(--card-bg); width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; padding: 16px 20px 28px; border: 1px solid var(--border-color); max-height: 85vh; overflow-y: auto; }
+    .bottom-sheet-content {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 600px;
+      box-sizing: border-box;
+      border-radius: 20px 20px 0 0;
+      border: 1px solid var(--border-color);
+      padding: 12px 14px calc(28px + env(safe-area-inset-bottom, 0px));
+      padding-left: max(14px, env(safe-area-inset-left, 0px));
+      padding-right: max(14px, env(safe-area-inset-right, 0px));
+      max-height: min(92vh, 100dvh - 12px);
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+    }
+    #avatarSheet .bottom-sheet-content {
+      max-height: min(94vh, 100dvh - 8px);
+    }
+    #avatarSheet .bottom-sheet-content,
+    #avatarSheet .menu-list-group,
+    #avatarSheet .snapshot-grid,
+    #avatarSheet .theme-picker,
+    #avatarSheet .avatar-edit-box {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    #avatarSheet .menu-list-item,
+    #avatarSheet .sheet-check,
+    #avatarSheet label {
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    #avatarSheet .snapshot-grid { width: 100%; box-sizing: border-box; 
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    #avatarSheet .snap-card {
+      min-width: 0;
+    }
+    #avatarSheet .theme-picker {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    #avatarSheet .theme-chip {
+      min-width: 0;
+      padding: 10px 4px;
+    }
     .sheet-handle { width: 36px; height: 4px; background: var(--border-color); border-radius: 2px; margin: 0 auto 12px; }
     .sheet-title { font-size: 1.1rem; font-weight: 700; text-align: center; }
     .sheet-subtitle { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 16px; }
@@ -645,7 +699,7 @@
     .nick-input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 12px; border-radius: 8px; font-weight: 700; text-align: center; font-size: 1rem; width: 190px; }
     
     .sheet-section-title { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 14px 0 8px; letter-spacing: 0.5px; }
-    .snapshot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .snapshot-grid { width: 100%; box-sizing: border-box;  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
     .snap-card { background: var(--input-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 10px; text-align: center; }
     .snap-val { font-size: 1.05rem; font-weight: 900; color: var(--warn-color); }
     .snap-lbl { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 2px; }
@@ -1280,6 +1334,7 @@
     <div class="bottom-sheet-content" onclick="event.stopPropagation()">
       <div class="sheet-handle"></div>
       <div class="sheet-title">Hub del Reseller</div>
+      <p style="font-size:0.72rem;color:var(--text-muted);margin:-6px 0 10px;font-weight:700;">Scorri verso il basso per tema e impostazioni</p>
       
       <div class="avatar-edit-box">
         <div class="avatar-large" onclick="document.getElementById('avatarFileInput').click()" title="Cambia foto profilo">
@@ -1338,28 +1393,26 @@
               <span class="tc-ico">✨</span>Gold
             </button>
           </div>
-
-          </div>
-          <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);margin:14px 0 6px;">⚙️ IMPOSTAZIONI</div>
-          <div style="display:flex;flex-direction:column;gap:8px;font-size:0.8rem;font-weight:700;">
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setSound" onchange="updateSetting('sound', this.checked)"> Suoni vendita/incasso</label>
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setVibrate" onchange="updateSetting('vibrate', this.checked)"> Vibrazione</label>
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setTrophies" onchange="updateSetting('trophiesEnabled', this.checked)"> Traguardi / XP attivi</label>
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-              <span>Giorni “pezzo fermo”</span>
-              <input type="number" id="setCriticalDays" min="7" max="180" style="width:64px;padding:6px;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);" onchange="updateSetting('criticalDays', parseInt(this.value,10)||30)">
-            </div>
-            <div style="font-size:0.68rem;color:var(--text-muted);margin-top:4px;">Incasso default per piattaforma</div>
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayVinted" onchange="updatePayoutDefault('Vinted', this.checked)"> Vinted già incassato</label>
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPaySubito" onchange="updatePayoutDefault('Subito', this.checked)"> Subito già incassato</label>
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayWallapop" onchange="updatePayoutDefault('Wallapop', this.checked)"> Wallapop già incassato</label>
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayEbay" onchange="updatePayoutDefault('eBay', this.checked)"> eBay già incassato</label>
-            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayPersona" onchange="updatePayoutDefault('Mercatino / Di Persona', this.checked)"> Di persona già incassato</label>
-            <div style="font-size:0.68rem;color:var(--text-muted);margin-top:6px;">Versione app: <span id="appVersionLabel">—</span></div>
-            <button type="button" class="cat-add-row" style="margin-top:4px;" onclick="openManageCategories()"><span style="width:100%;display:block;text-align:center;padding:8px;border:1px dashed var(--border-color);border-radius:8px;font-weight:800;font-size:0.75rem;">Gestisci categorie</span></button>
-          </div>
-
         </div>
+      </div>
+
+      <div class="sheet-section-title">⚙️ Impostazioni</div>
+      <div class="menu-list-group" style="padding:10px 12px 12px;">
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setSound" onchange="updateSetting('sound', this.checked)"> Suoni vendita/incasso</label>
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setVibrate" onchange="updateSetting('vibrate', this.checked)"> Vibrazione</label>
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setTrophies" onchange="updateSetting('trophiesEnabled', this.checked)"> Traguardi / XP attivi</label>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0;font-size:0.8rem;font-weight:700;">
+          <span>Giorni “pezzo fermo”</span>
+          <input type="number" id="setCriticalDays" min="7" max="180" style="width:64px;padding:6px;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);" onchange="updateSetting('criticalDays', parseInt(this.value,10)||30)">
+        </div>
+        <div style="font-size:0.68rem;color:var(--text-muted);margin:8px 0 4px;font-weight:800;">Incasso default per piattaforma</div>
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setPayVinted" onchange="updatePayoutDefault('Vinted', this.checked)"> Vinted già incassato</label>
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setPaySubito" onchange="updatePayoutDefault('Subito', this.checked)"> Subito già incassato</label>
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setPayWallapop" onchange="updatePayoutDefault('Wallapop', this.checked)"> Wallapop già incassato</label>
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setPayEbay" onchange="updatePayoutDefault('eBay', this.checked)"> eBay già incassato</label>
+        <label class="sheet-check" style="margin:6px 0;"><input type="checkbox" id="setPayPersona" onchange="updatePayoutDefault('Mercatino / Di Persona', this.checked)"> Di persona già incassato</label>
+        <div style="font-size:0.68rem;color:var(--text-muted);margin-top:10px;">Versione app: <span id="appVersionLabel">—</span></div>
+        <button type="button" onclick="openManageCategories()" style="margin-top:10px;width:100%;padding:10px;border-radius:10px;border:1px dashed var(--border-color);background:transparent;color:var(--text-color);font-weight:800;font-size:0.78rem;cursor:pointer;">Gestisci categorie</button>
       </div>
 
       <div class="sheet-section-title">Utility Rapide</div>
