@@ -1338,6 +1338,27 @@
               <span class="tc-ico">✨</span>Gold
             </button>
           </div>
+
+          </div>
+          <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);margin:14px 0 6px;">⚙️ IMPOSTAZIONI</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:0.8rem;font-weight:700;">
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setSound" onchange="updateSetting('sound', this.checked)"> Suoni vendita/incasso</label>
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setVibrate" onchange="updateSetting('vibrate', this.checked)"> Vibrazione</label>
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setTrophies" onchange="updateSetting('trophiesEnabled', this.checked)"> Traguardi / XP attivi</label>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+              <span>Giorni “pezzo fermo”</span>
+              <input type="number" id="setCriticalDays" min="7" max="180" style="width:64px;padding:6px;border-radius:8px;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);" onchange="updateSetting('criticalDays', parseInt(this.value,10)||30)">
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);margin-top:4px;">Incasso default per piattaforma</div>
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayVinted" onchange="updatePayoutDefault('Vinted', this.checked)"> Vinted già incassato</label>
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPaySubito" onchange="updatePayoutDefault('Subito', this.checked)"> Subito già incassato</label>
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayWallapop" onchange="updatePayoutDefault('Wallapop', this.checked)"> Wallapop già incassato</label>
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayEbay" onchange="updatePayoutDefault('eBay', this.checked)"> eBay già incassato</label>
+            <label class="sheet-check" style="margin:0;"><input type="checkbox" id="setPayPersona" onchange="updatePayoutDefault('Mercatino / Di Persona', this.checked)"> Di persona già incassato</label>
+            <div style="font-size:0.68rem;color:var(--text-muted);margin-top:6px;">Versione app: <span id="appVersionLabel">—</span></div>
+            <button type="button" class="cat-add-row" style="margin-top:4px;" onclick="openManageCategories()"><span style="width:100%;display:block;text-align:center;padding:8px;border:1px dashed var(--border-color);border-radius:8px;font-weight:800;font-size:0.75rem;">Gestisci categorie</span></button>
+          </div>
+
         </div>
       </div>
 
@@ -1782,11 +1803,11 @@
       <label class="sheet-check"><input type="checkbox" id="sheetPayoutReceived"> Incasso già ricevuto (se no → saldo in attesa)</label>
       <label style="font-size:0.75rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:8px;">PIATTAFORMA:</label>
       <div class="sheet-platform-grid">
-        <button type="button" class="btn-sheet-platform btn-p-vinted" onclick="confirmSheetSell('Vinted')"><span class="p-icon">V</span> Vinted</button>
-        <button type="button" class="btn-sheet-platform btn-p-wallapop" onclick="confirmSheetSell('Wallapop')"><span class="p-icon">W</span> Wallapop</button>
-        <button type="button" class="btn-sheet-platform btn-p-subito" onclick="confirmSheetSell('Subito')"><span class="p-icon">S</span> Subito</button>
-        <button type="button" class="btn-sheet-platform btn-p-ebay" onclick="confirmSheetSell('eBay')"><span class="p-icon">e</span> eBay</button>
-        <button type="button" class="btn-sheet-platform btn-p-persona" onclick="confirmSheetSell('Mercatino / Di Persona')"><span class="p-icon">🤝</span> Di Persona</button>
+        <button type="button" class="btn-sheet-platform btn-p-vinted" onclick="prepareAndSell('Vinted')"><span class="p-icon">V</span> Vinted</button>
+        <button type="button" class="btn-sheet-platform btn-p-wallapop" onclick="prepareAndSell('Wallapop')"><span class="p-icon">W</span> Wallapop</button>
+        <button type="button" class="btn-sheet-platform btn-p-subito" onclick="prepareAndSell('Subito')"><span class="p-icon">S</span> Subito</button>
+        <button type="button" class="btn-sheet-platform btn-p-ebay" onclick="prepareAndSell('eBay')"><span class="p-icon">e</span> eBay</button>
+        <button type="button" class="btn-sheet-platform btn-p-persona" onclick="prepareAndSell('Mercatino / Di Persona')"><span class="p-icon">🤝</span> Di Persona</button>
       </div>
       <button type="button" class="btn-sheet-cancel" onclick="closeSellSheet()">Annulla</button>
     </div>
@@ -2045,12 +2066,24 @@
 
     try {
       const saved = localStorage.getItem(DB_KEY);
-      db = saved ? JSON.parse(saved) : userRealDataset;
+      let parsed = saved ? JSON.parse(saved) : userRealDataset;
+      if (!Array.isArray(parsed)) throw new Error("db non array");
+      db = sanitizeItems(parsed);
       if (!saved) localStorage.setItem(DB_KEY, JSON.stringify(db));
-    } catch(e) { db = userRealDataset; }
+    } catch(e) {
+      console.error("load db", e);
+      db = [];
+      try { notify("Dati inventario non validi. Usa Importa backup o parti da zero."); } catch (err) {}
+    }
 
-    try { expenses = JSON.parse(localStorage.getItem(EXP_KEY) || "[]"); } catch(e) { expenses = []; }
-    try { adjustments = JSON.parse(localStorage.getItem(ADJ_KEY) || "[]"); } catch(e) { adjustments = []; }
+    try {
+      const ep = JSON.parse(localStorage.getItem(EXP_KEY) || "[]");
+      expenses = Array.isArray(ep) ? sanitizeExpenses(ep) : [];
+    } catch(e) { expenses = []; }
+    try {
+      const ad = JSON.parse(localStorage.getItem(ADJ_KEY) || "[]");
+      adjustments = Array.isArray(ad) ? sanitizeAdjustments(ad) : [];
+    } catch(e) { adjustments = []; }
 
     const savedTheme = localStorage.getItem(THEME_KEY);
     if (savedTheme === "dark" || savedTheme === "light" || savedTheme === "gold") {
@@ -2222,6 +2255,10 @@
 
     function setStatusFilter(status) {
       currentStatusFilter = status;
+      if (status === "sold") {
+        const sortEl = document.getElementById("sortBy");
+        if (sortEl) sortEl.value = "soldDate-desc";
+      }
       document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
       
       const mainView = document.getElementById("mainView");
@@ -2397,7 +2434,116 @@
     }
 
 
+
     /* RK HELPERS */
+    const APP_VERSION = "5.1.0";
+    const SETTINGS_KEY = "resell_king_settings_v1";
+    const VERSION_SEEN_KEY = "resell_king_version_seen";
+
+    function defaultSettings() {
+      return {
+        sound: true,
+        vibrate: true,
+        criticalDays: 30,
+        trophiesEnabled: true,
+        payoutDefaults: {
+          "Vinted": false,
+          "Wallapop": false,
+          "Subito": false,
+          "eBay": false,
+          "Mercatino / Di Persona": true
+        }
+      };
+    }
+    function loadSettings() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "null");
+        const d = defaultSettings();
+        if (!raw || typeof raw !== "object") return d;
+        return {
+          sound: raw.sound !== false,
+          vibrate: raw.vibrate !== false,
+          criticalDays: Math.max(7, Math.min(180, parseInt(raw.criticalDays, 10) || 30)),
+          trophiesEnabled: raw.trophiesEnabled !== false,
+          payoutDefaults: { ...d.payoutDefaults, ...(raw.payoutDefaults || {}) }
+        };
+      } catch (e) { return defaultSettings(); }
+    }
+    function saveSettings(s) {
+      try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) {}
+    }
+    function updateSetting(key, val) {
+      const s = loadSettings();
+      if (key === "criticalDays") s.criticalDays = Math.max(7, Math.min(180, parseInt(val, 10) || 30));
+      else s[key] = !!val;
+      saveSettings(s);
+      if (key === "criticalDays") renderApp();
+      notify("Impostazione salvata");
+    }
+    function updatePayoutDefault(platform, checked) {
+      const s = loadSettings();
+      s.payoutDefaults = s.payoutDefaults || {};
+      s.payoutDefaults[platform] = !!checked;
+      saveSettings(s);
+      notify("Default " + platform + ": " + (checked ? "già incassato" : "in attesa"));
+    }
+    function fillSettingsForm() {
+      const s = loadSettings();
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.checked = !!v; };
+      set("setSound", s.sound); set("setVibrate", s.vibrate); set("setTrophies", s.trophiesEnabled);
+      const cd = document.getElementById("setCriticalDays"); if (cd) cd.value = s.criticalDays;
+      set("setPayVinted", s.payoutDefaults["Vinted"]);
+      set("setPaySubito", s.payoutDefaults["Subito"]);
+      set("setPayWallapop", s.payoutDefaults["Wallapop"]);
+      set("setPayEbay", s.payoutDefaults["eBay"]);
+      set("setPayPersona", s.payoutDefaults["Mercatino / Di Persona"]);
+      const vl = document.getElementById("appVersionLabel"); if (vl) vl.textContent = APP_VERSION;
+    }
+    function openManageCategories() {
+      const cats = loadCustomCategories();
+      if (!cats.length) return notify("Nessuna categoria personalizzata. Aggiungine una da un form.");
+      const name = prompt("Categoria da eliminare o rinominare.\nScrivi il nome esatto:\n\n" + cats.join("\n"));
+      if (!name) return;
+      const t = name.trim();
+      if (!cats.includes(t)) return notify("Categoria non trovata tra le personalizzate.");
+      const action = prompt("Scrivi ELIMINA oppure il NUOVO NOME per rinominare:");
+      if (!action) return;
+      if (action.trim().toUpperCase() === "ELIMINA") {
+        const used = db.some(i => i.c === t);
+        if (used && !confirm("Ci sono oggetti con questa categoria. Verranno spostati in Altro. Continuo?")) return;
+        db.forEach(i => { if (i.c === t) i.c = "Altro"; });
+        saveCustomCategories(cats.filter(c => c !== t));
+        saveData();
+        refreshAllCategorySelects();
+        notify("Categoria eliminata");
+      } else {
+        const neu = action.trim().slice(0, 40);
+        if (!neu) return;
+        db.forEach(i => { if (i.c === t) i.c = neu; });
+        saveCustomCategories(cats.map(c => c === t ? neu : c));
+        saveData();
+        refreshAllCategorySelects();
+        notify("Categoria rinominata in " + neu);
+      }
+    }
+    function checkAppVersion() {
+      try {
+        const seen = localStorage.getItem(VERSION_SEEN_KEY);
+        if (seen !== APP_VERSION) {
+          localStorage.setItem(VERSION_SEEN_KEY, APP_VERSION);
+          if (seen) notify("Resell King aggiornata a v" + APP_VERSION);
+        }
+      } catch (e) {}
+    }
+
+    function getCriticalDays() { return loadSettings().criticalDays; }
+    function isPayoutReceivedDefault(platform) {
+      const map = loadSettings().payoutDefaults || {};
+      if (Object.prototype.hasOwnProperty.call(map, platform)) return !!map[platform];
+      return platform.indexOf("Persona") >= 0 || platform.indexOf("Mercatino") >= 0;
+    }
+
+
     const DEFAULT_CATEGORIES = ["Gaming / Videogiochi","Abbigliamento","Scarpe","Borse & Accessori","Elettronica","Libri","Casa & Cucina","Bambini & Giocattoli","Sport & Outdoor","Collezionismo","Bellezza & Cura","Altro"];
     const CUSTOM_CATS_KEY = "resell_king_custom_cats_v1";
     const LAST_FEE_KEY = "resell_king_last_fee_by_platform_v1";
@@ -2417,9 +2563,9 @@
     function applyPlatformFeeHint(platform){ const feeInput=document.getElementById("sheetSellFee"); if(!feeInput)return; const cur=parseFloat(String(feeInput.value).replace(",", "."))||0; if(!feeInput.value||cur===0){ const sug=suggestedFeeFor(platform); feeInput.value=sug?String(sug):"0"; } }
     function markBackupDone(){ try{ localStorage.setItem(LAST_BACKUP_KEY, String(Date.now())); }catch(e){} updateBackupReminders(); }
     function updateBackupReminders(){ let ts=0; try{ ts=parseInt(localStorage.getItem(LAST_BACKUP_KEY)||"0",10)||0; }catch(e){} const days=ts?Math.floor((Date.now()-ts)/86400000):null; const need=!ts||days>=7; const text=!ts?"Nessun backup con foto recente. Consigliato per non perdere l'inventario.":("Ultimo backup: "+days+" giorni fa. Meglio rifarlo con foto."); ["backupReminderBox","homeBackupReminder"].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.toggle("show",need); }); const t1=document.getElementById("backupReminderText"); const t2=document.getElementById("homeBackupReminderText"); if(t1)t1.textContent=text; if(t2)t2.textContent=text; }
-    function getLockedCapital(){ let sum=0,n=0; db.forEach(i=>{ if(i.s!=="stock")return; if(daysInStock(i)>=30){ sum+=parseFloat(i.bp)||0; n++; } }); return {sum,n}; }
-    function getPendingBalance(){ let sum=0,n=0; db.forEach(i=>{ if(i.s==="sold"&&i.pendingPayout){ sum+=parseFloat(i.sp)||0; n++; } }); return {sum,n}; }
-    function playSaleFeedback(){ try{ if(navigator.vibrate) navigator.vibrate([40,40,70]); }catch(e){} try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return; const ctx=new AC(), now=ctx.currentTime; const master=ctx.createGain(); master.gain.setValueAtTime(0.0001,now); master.gain.exponentialRampToValueAtTime(0.22,now+0.02); master.gain.exponentialRampToValueAtTime(0.0001,now+0.5); master.connect(ctx.destination); [988,1480].forEach((freq,i)=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type="square"; o.frequency.setValueAtTime(freq,now); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.18,now+0.015+i*0.05); g.gain.exponentialRampToValueAtTime(0.0001,now+0.22+i*0.08); o.connect(g); g.connect(master); o.start(now+i*0.05); o.stop(now+0.55); }); setTimeout(()=>{ try{ ctx.close(); }catch(e){} },700); }catch(e){} }
+    function getLockedCapital(){ const cd=getCriticalDays(); let sum=0,n=0; db.forEach(i=>{ if(i.s!=="stock")return; if(daysInStock(i)>=cd){ sum+=parseFloat(i.bp)||0; n++; } }); return {sum,n}; }
+    function getPendingBalance(){ let sum=0,n=0; db.forEach(i=>{ if(i.s==="sold"&&i.pendingPayout){ const sp=parseFloat(i.sp)||0; const fee=parseFloat(i.fee)||0; sum+=Math.max(0, sp-fee); n++; } }); return {sum,n}; }
+    function playSaleFeedback(){ const st=loadSettings(); try{ if(st.vibrate && navigator.vibrate) navigator.vibrate([40,40,70]); }catch(e){} if(!st.sound) return; try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return; const ctx=new AC(), now=ctx.currentTime; const master=ctx.createGain(); master.gain.setValueAtTime(0.0001,now); master.gain.exponentialRampToValueAtTime(0.22,now+0.02); master.gain.exponentialRampToValueAtTime(0.0001,now+0.5); master.connect(ctx.destination); [988,1480].forEach((freq,i)=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type="square"; o.frequency.setValueAtTime(freq,now); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.18,now+0.015+i*0.05); g.gain.exponentialRampToValueAtTime(0.0001,now+0.22+i*0.08); o.connect(g); g.connect(master); o.start(now+i*0.05); o.stop(now+0.55); }); setTimeout(()=>{ try{ ctx.close(); }catch(e){} },700); }catch(e){} }
     function undoLastSale(){ if(!lastSaleUndo) return notify("Nessuna vendita da annullare."); const {id,snapshot}=lastSaleUndo; const item=db.find(x=>x.id===id); if(!item){ lastSaleUndo=null; return notify("Oggetto non trovato."); } Object.assign(item,snapshot); lastSaleUndo=null; if(lastSaleUndoTimer){ clearTimeout(lastSaleUndoTimer); lastSaleUndoTimer=null; } try{ document.getElementById("celebrateModal").style.display="none"; }catch(e){} saveData(); notify("Vendita annullata · pezzo di nuovo in stock"); try{ renderWeeklyMissions(); }catch(e){} }
     function setListedFilter(mode){ filterListedMode=mode; document.querySelectorAll(".listed-chip").forEach(c=>c.classList.toggle("on", c.getAttribute("data-mode")===mode)); if(currentStatusFilter==="stock"||currentStatusFilter==="ALL") renderApp(); else setStatusFilter("stock"); }
     function toggleListed(id){ const item=db.find(x=>String(x.id)===String(id)); if(!item||item.s==="sold")return; item.listed=!item.listed; saveData(); notify(item.listed?"In vendita (listed)":"Non pubblicato"); }
@@ -2432,7 +2578,7 @@
     function weeklyMissionContext(){ let soldWeek=0,addedWeek=0,critSoldWeek=0; db.forEach(i=>{ if(i.s==="sold"&&isInCurrentWeek(i.soldDate||i.d)){ soldWeek++; try{ const a=parseItDate(i.d),b=parseItDate(i.soldDate||i.d); if(a&&b&&Math.round((b-a)/86400000)>=30) critSoldWeek++; }catch(e){} } if(isInCurrentWeek(i.d)) addedWeek++; }); let backupWeek=0; try{ const ts=parseInt(localStorage.getItem(LAST_BACKUP_KEY)||"0",10)||0; if(ts&&(Date.now()-ts)<7*86400000) backupWeek=1; }catch(e){} return {soldWeek,addedWeek,critSoldWeek,backupWeek}; }
     function renderWeeklyMissions(){ const box=document.getElementById("weeklyMissionsList"); if(!box)return; const ctx=weeklyMissionContext(); const defs=[{title:"Chiudi 1 vendita",target:1,p:ctx.soldWeek},{title:"Aggiungi 2 oggetti",target:2,p:ctx.addedWeek},{title:"Backup con foto",target:1,p:ctx.backupWeek},{title:"Vendi 1 pezzo critico (30+ gg)",target:1,p:ctx.critSoldWeek}]; box.innerHTML=defs.map(m=>{ const p=Math.min(m.target,m.p||0); const done=p>=m.target; return `<div class="mission-row${done?" done":""}"><span>${done?"✅ ":"▫️ "}${m.title}</span><span class="mission-prog">${p}/${m.target}</span></div>`; }).join(""); }
     function periodStats(filterFn){ let sales=0,profit=0,count=0,expensesSum=0; db.forEach(i=>{ if(i.s!=="sold")return; const d=i.soldDate||i.d; if(!filterFn(d))return; count++; sales+=parseFloat(i.sp)||0; profit+=getItemNetProfit(i); }); expenses.forEach(e=>{ if(filterFn(e.date)) expensesSum+=parseFloat(e.amount)||0; }); return {sales,profit,count,expensesSum,net:profit-expensesSum}; }
-    function fillPeriodGrid(id,st){ const el=document.getElementById(id); if(!el)return; const cell=(l,v)=>`<div class="ps-item"><div class="ps-l">${l}</div><div class="ps-v">${v}</div></div>`; el.innerHTML=[cell("Vendite",st.count),cell("Incassato","€"+st.sales.toFixed(2).replace(".",",")),cell("Netto pezzi","€"+st.profit.toFixed(2).replace(".",",")),cell("Dopo spese","€"+st.net.toFixed(2).replace(".",","))].join(""); }
+    function fillPeriodGrid(id,st){ const el=document.getElementById(id); if(!el)return; const cell=(l,v)=>`<div class="ps-item"><div class="ps-l">${l}</div><div class="ps-v">${v}</div></div>`; el.innerHTML=[cell("Vendite",st.count),cell("Incassi lordo","€"+st.sales.toFixed(2).replace(".",",")),cell("Netto pezzi","€"+st.profit.toFixed(2).replace(".",",")),cell("Spese (solo cassa)","€"+st.expensesSum.toFixed(2).replace(".",","))].join(""); }
     function renderPeriodSummaries(){ fillPeriodGrid("weekSummaryGrid", periodStats(isInCurrentWeek)); fillPeriodGrid("monthSummaryGrid", periodStats(isInCurrentMonth)); }
 
     function emptyStateHtml(ico, title, sub, btnLabel, btnOnclick) {
@@ -2441,6 +2587,7 @@
     }
 
     function openAvatarMenu() {
+      try { fillSettingsForm(); } catch (e) {}
       updateAvatarSnapshot();
       loadUserProfile();
       renderLevelInfo();
@@ -2578,13 +2725,13 @@
       { id: "inv_150", cat: "inv", title: "Archivista", desc: "150 oggetti totali", xp: 50, target: 150, progress: ctx => ctx.total },
       { id: "stock_10", cat: "inv", title: "Stock vivo", desc: "Almeno 10 pezzi in stock ora", xp: 15, target: 10, progress: ctx => ctx.stockNow },
       { id: "stock_25", cat: "inv", title: "Stock serio", desc: "25 pezzi in stock ora", xp: 25, target: 25, progress: ctx => ctx.stockNow },
-      { id: "bp_30", cat: "inv", title: "Pezzo importante", desc: "Un acquisto ≥ €30", xp: 15, target: 1, progress: ctx => ctx.hasBp30 ? 1 : 0 },
-      { id: "bp_50", cat: "inv", title: "Caccia grossa", desc: "Un acquisto ≥ €50", xp: 20, target: 1, progress: ctx => ctx.hasBp50 ? 1 : 0 },
+      { id: "bp_30", cat: "inv", title: "Primo margine solido", desc: "Una vendita con netto ≥ €15", xp: 15, target: 1, progress: ctx => (ctx.maxSaleNet||0) >= 15 ? 1 : 0 },
+      { id: "bp_50", cat: "inv", title: "Bel colpo", desc: "Una vendita con netto ≥ €30", xp: 20, target: 1, progress: ctx => (ctx.maxSaleNet||0) >= 30 ? 1 : 0 },
       { id: "free_1", cat: "inv", title: "Costo zero ×1", desc: "1 oggetto a bp 0", xp: 10, target: 1, progress: ctx => ctx.freeCount },
       { id: "free_5", cat: "inv", title: "Costo zero ×5", desc: "5 oggetti a bp 0", xp: 20, target: 5, progress: ctx => ctx.freeCount },
       { id: "free_10", cat: "inv", title: "Costo zero ×10", desc: "10 oggetti a bp 0", xp: 30, target: 10, progress: ctx => ctx.freeCount },
       { id: "src_3", cat: "inv", title: "Tre fonti", desc: "3 fonti di acquisto diverse", xp: 15, target: 3, progress: ctx => ctx.sources },
-      { id: "day_buy_5", cat: "inv", title: "Giornata acquisti", desc: "5 oggetti acquistati lo stesso giorno", xp: 20, target: 1, progress: ctx => ctx.maxBuySameDay >= 5 ? 1 : 0 },
+      { id: "day_sell_3", cat: "inv", title: "Giornata vendite", desc: "3 vendite lo stesso giorno", xp: 20, target: 1, progress: ctx => (ctx.maxSoldSameDay||0) >= 3 ? 1 : 0 },
       // Categorie
       { id: "cat_game_10", cat: "cat", title: "Videogiocatore", desc: "10 pezzi Gaming totali", xp: 15, target: 10, progress: ctx => ctx.catTotal["Gaming / Videogiochi"] || 0 },
       { id: "cat_cloth_10", cat: "cat", title: "Stilista", desc: "10 pezzi Abbigliamento totali", xp: 15, target: 10, progress: ctx => ctx.catTotal["Abbigliamento"] || 0 },
@@ -2635,8 +2782,8 @@
       { id: "r_x5", cat: "roi", title: "Cinque raddoppi", desc: "5 vendite con ROI ≥ 100%", xp: 40, target: 5, progress: ctx => ctx.roi100Count },
       { id: "r_free10", cat: "roi", title: "Mani d'oro", desc: "bp 0 venduto a ≥ €10", xp: 20, target: 1, progress: ctx => ctx.bestZero >= 10 ? 1 : 0 },
       { id: "r_free20", cat: "roi", title: "Regalo top", desc: "bp 0 venduto a ≥ €20", xp: 30, target: 1, progress: ctx => ctx.bestZero >= 20 ? 1 : 0 },
-      { id: "r_fee10", cat: "roi", title: "Fee consapevole", desc: "Commissioni totali ≥ €10", xp: 15, target: 10, progress: ctx => Math.floor(ctx.feeTotal) },
-      { id: "r_fee25", cat: "roi", title: "Fee 25 €", desc: "Commissioni totali ≥ €25", xp: 25, target: 25, progress: ctx => Math.floor(ctx.feeTotal) },
+      { id: "r_fee10", cat: "roi", title: "Netto in crescita", desc: "Profitto netto totale ≥ €50", xp: 15, target: 50, progress: ctx => Math.floor(Math.max(0, ctx.netTotal||0)) },
+      { id: "r_fee25", cat: "roi", title: "Netto solido", desc: "Profitto netto totale ≥ €150", xp: 25, target: 150, progress: ctx => Math.floor(Math.max(0, ctx.netTotal||0)) },
       { id: "r_gt_stock", cat: "roi", title: "Netto > giacenza", desc: "Netto totale > valore stock attuale", xp: 40, target: 1, progress: ctx => ctx.netTotal > ctx.stockVal ? 1 : 0 },
       // Speed
       { id: "v_0", cat: "speed", title: "Vendita lampo", desc: "Venduto lo stesso giorno dell'acquisto", xp: 25, target: 1, progress: ctx => ctx.flip0 ? 1 : 0 },
@@ -2759,7 +2906,7 @@
       const maxSoldSameDay = Math.max(0, ...Object.values(soldDay), 0);
       const maxSoldMonth = Math.max(0, ...Object.values(soldMonth), 0);
       const avgDays = daysN ? daysSum / daysN : 999;
-      const stockCriticalNow = stockItems.filter(i => daysInStock(i) >= 30).length;
+      const stockCriticalNow = stockItems.filter(i => daysInStock(i) >= getCriticalDays()).length;
       const zeroCrit = stockItems.length >= 5 && stockCriticalNow === 0;
       const platKinds = Object.keys(plat).length + (platPersona > 0 ? 1 : 0);
       const main = ["Vinted", "Wallapop", "Subito", "eBay"];
@@ -3412,7 +3559,7 @@
         let matchStockAge = true;
         if (item.s === "stock" && (filterCriticalOnly || filterFreshOnly)) {
           const d = daysInStock(item);
-          if (filterCriticalOnly) matchStockAge = d >= 30;
+          if (filterCriticalOnly) matchStockAge = d >= getCriticalDays();
           if (filterFreshOnly) matchStockAge = d <= 7;
         }
         let matchListed = true;
@@ -3530,7 +3677,7 @@
               ) : ""}
               ${isSold && item.pendingPayout ? `<span class="badge-pending">In attesa</span>` : ""}
               ${srcBadge} ${esc(item.c)} • ${bpText} (${esc(item.d)})
-              ${!isSold ? `<br><span class="days-tag" style="color:${days > 30 ? 'var(--danger-color)' : (days >= 15 ? 'var(--warn-color)' : 'var(--success-color)')}">⏳ In stock da ${days} giorni</span>` : ""}
+              ${!isSold ? `<br><span class="days-tag" style="color:${days >= getCriticalDays() ? 'var(--danger-color)' : (days >= 15 ? 'var(--warn-color)' : 'var(--success-color)')}">⏳ In stock da ${days} giorni</span>` : ""}
               ${isSold ? `<br>Vend: €${sp.toFixed(2)} ${soldPlatBadge} (${esc(item.soldDate||"-")}) ${roiHtml}` : ""}
             </div>
           </div>
@@ -4050,6 +4197,14 @@
       activeSheetItemId = null;
     }
 
+    function prepareAndSell(platform) {
+      const cb = document.getElementById("sheetPayoutReceived");
+      // Se l'utente non ha toccato la spunta, usa default piattaforma; se l'ha cambiata, rispettala.
+      // Semplicità: al tap piattaforma applica sempre il default piattaforma (esplicito e prevedibile).
+      if (cb) cb.checked = isPayoutReceivedDefault(platform);
+      confirmSheetSell(platform);
+    }
+
     function confirmSheetSell(platform) {
       applyPlatformFeeHint(platform);
       const priceVal = document.getElementById("sheetSellPrice").value.replace(",", ".");
@@ -4176,6 +4331,7 @@
         newDb.length + " oggetti, " + newExp.length + " spese" + (photos ? ", " + nPhotos + " foto" : "") +
         ")?\n\nPrima viene scaricata una copia di sicurezza dei dati attuali.";
       if (!confirm(msg)) return;
+      const beforeN = db.length; const beforeCash = getCurrentCashValue();
       await downloadBackup(true);
       db = newDb; expenses = newExp; adjustments = newAdj;
       trash = []; saveTrash();
@@ -4208,7 +4364,7 @@
         Object.keys(all || {}).forEach(k => { photoCache[k] = all[k]; });
       } catch (e) {}
       computeTrophies({ silent: true, renderList: false });
-      notify("Dati importati. Oggetti: " + db.length + " | Spese: " + expenses.length + (photos ? " | Foto: " + nPhotos : ""));
+      notify("Import ok. Prima: "+beforeN+" ogg. / cassa €"+beforeCash.toFixed(2)+" → Ora: "+db.length+" ogg. / cassa €"+getCurrentCashValue().toFixed(2)+(photos?" | Foto: "+nPhotos:""));
     }
 
     function importData() {
@@ -4404,6 +4560,7 @@
       } catch (e) {}
       refreshAllCategorySelects();
       updateBackupReminders();
+      try { checkAppVersion(); } catch (e) {}
       try { renderWeeklyMissions(); } catch (e) {}
       renderApp();
       try { showWelcomeIfNeeded(); } catch (e) {}
