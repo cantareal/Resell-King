@@ -1079,6 +1079,96 @@
     .filter-chip { border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-muted);border-radius:999px;padding:5px 10px;font-size:0.7rem;font-weight:800;cursor:pointer; }
     .filter-chip.on { background:var(--accent-color);color:#fff;border-color:transparent; }
 
+
+    .header-chip {
+      position: relative;
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      min-width: 40px; height: 36px; padding: 0 10px;
+      border-radius: 999px; border: 1px solid var(--border-color);
+      background: var(--card-bg); color: var(--text-color);
+      font-size: 0.72rem; font-weight: 800; cursor: pointer;
+    }
+    .header-chip:active { transform: scale(0.96); }
+    [data-theme="gold"] .header-chip {
+      border-color: rgba(251,191,36,0.45);
+      box-shadow: 0 0 0 1px rgba(251,191,36,0.12);
+      color: #fde68a;
+    }
+    .header-chip .chip-badge {
+      position: absolute; top: -4px; right: -4px;
+      min-width: 16px; height: 16px; padding: 0 4px;
+      border-radius: 999px; background: #ef4444; color: #fff;
+      font-size: 0.6rem; font-weight: 900;
+      display: none; align-items: center; justify-content: center;
+    }
+    .header-chip .chip-badge.show { display: flex; }
+    .goal-modal-overlay, .notif-overlay {
+      position: fixed; inset: 0; z-index: 260;
+      background: var(--modal-overlay);
+      display: none; align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .goal-modal-overlay.show, .notif-overlay.show { display: flex; }
+    .goal-modal-card, .notif-card {
+      width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: 18px; padding: 18px 16px 16px;
+      box-sizing: border-box;
+    }
+    [data-theme="gold"] .goal-modal-card,
+    [data-theme="gold"] .notif-card {
+      border-color: rgba(251,191,36,0.4);
+      box-shadow: 0 0 24px rgba(251,191,36,0.12);
+    }
+    .goal-modal-card h3, .notif-card h3 {
+      margin: 0 0 12px; font-size: 1.05rem; text-align: center;
+    }
+    .goal-pct {
+      text-align: center; font-size: 2.4rem; font-weight: 900;
+      color: var(--warn-color); line-height: 1.1; margin: 4px 0 10px;
+    }
+    .goal-modal-bar {
+      height: 8px; border-radius: 999px; background: var(--border-color);
+      overflow: hidden; margin-bottom: 14px;
+    }
+    .goal-modal-bar > div {
+      height: 100%; width: 0%; background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      border-radius: 999px; transition: width 0.35s ease;
+    }
+    .goal-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .goal-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem; font-weight: 700;
+      padding: 8px 10px; border-radius: 10px; background: var(--input-bg);
+    }
+    .goal-row span:last-child { font-variant-numeric: tabular-nums; }
+    .goal-hint {
+      text-align: center; font-size: 0.75rem; color: var(--text-muted);
+      font-weight: 700; margin-bottom: 12px;
+    }
+    .goal-actions { display: flex; flex-direction: column; gap: 8px; }
+    .goal-actions button {
+      width: 100%; padding: 12px; border-radius: 12px; font-weight: 800;
+      font-size: 0.85rem; cursor: pointer; border: none;
+    }
+    .goal-btn-primary {
+      background: linear-gradient(145deg, #fbbf24, #d97706); color: #1c1917;
+    }
+    .goal-btn-secondary {
+      background: transparent; color: var(--text-color);
+      border: 1px solid var(--border-color) !important;
+    }
+    .notif-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 8px; border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item .ni-ico { font-size: 1.2rem; line-height: 1; }
+    .notif-item .ni-title { font-size: 0.82rem; font-weight: 800; }
+    .notif-item .ni-sub { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .notif-empty { text-align: center; padding: 24px 12px; color: var(--text-muted); font-weight: 700; font-size: 0.85rem; }
+
   </style>
 </head>
 <body>
@@ -1092,7 +1182,9 @@
     </div>
     <div class="header-actions">
       <button id="installBtn" onclick="installPWA()" style="display:none;background:#d97706;color:#fff;border:none;padding:6px 10px;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;width:auto;">⬇ Installa</button>
-      <button class="trophy-header-btn" onclick="setStatusFilter('TROPHIES')">🏆 Trofei</button>
+      <button type="button" class="header-chip" id="headerGoalChip" onclick="openGoalModal()" title="Obiettivo mensile">🎯 <span id="headerGoalPct">0%</span></button>
+      <button type="button" class="header-chip" id="headerNotifChip" onclick="openNotifPanel()" title="Notifiche">🔔<span class="chip-badge" id="notifBadge">0</span></button>
+      <button class="trophy-header-btn" onclick="setStatusFilter('TROPHIES')">🏆</button>
     </div>
   </div>
 
@@ -1122,27 +1214,13 @@
     </div>
   </div>
 
-  <div class="goal-card">
-    <div class="goal-header">
-      <div class="goal-header-left">
-        <span>🎯 Obiettivo: €</span><input type="number" id="targetGoalInput" class="goal-input" value="200" oninput="updateGoal()">
-      </div>
-      <span id="goalPercentText">0%</span>
-    </div>
+  <!-- obiettivo e critici spostati in header 🎯 / 🔔 -->
+  <input type="hidden" id="targetGoalInput" value="200">
+  <div class="goal-card" style="display:none !important;" aria-hidden="true">
+    <span id="goalPercentText">0%</span>
     <div class="progress-bar-bg"><div class="progress-bar-fill" id="goalProgressBar"></div></div>
   </div>
-
-  <div class="suggest-card" id="suggestCard">
-    <div class="suggest-row">
-      <div class="suggest-text">
-        <div class="suggest-label">Da vendere · <span id="suggestDays">—</span></div>
-        <div class="suggest-title" id="suggestTitle">—</div>
-        <div class="suggest-meta" id="suggestMeta">—</div>
-      </div>
-      <button type="button" class="suggest-mini-btn" id="suggestSellBtn">Vendi</button>
-      <button type="button" class="suggest-x" id="suggestDismissBtn" title="Nascondi oggi">✕</button>
-    </div>
-  </div>
+  <div class="suggest-card" id="suggestCard" style="display:none !important;" aria-hidden="true"></div>
 
   <div id="homeBackupReminder" class="backup-reminder"><span id="homeBackupReminderText">Fai un backup con foto</span><button type="button" onclick="downloadBackup(true)">Backup + foto</button></div>
   <div class="status-tabs">
@@ -2434,36 +2512,10 @@
 
     function updateSuggestCard() {
       const card = document.getElementById("suggestCard");
-      if (!card) return;
-      if (currentStatusFilter === "STATS" || currentStatusFilter === "TROPHIES" || currentStatusFilter === "EXPENSES" || currentStatusFilter === "sold") {
-        card.classList.remove("show");
-        return;
-      }
-      try {
-        if (localStorage.getItem(suggestDismissKey()) === "1") {
-          card.classList.remove("show");
-          return;
-        }
-      } catch (e) {}
-      const item = getSuggestItem();
-      if (!item) { card.classList.remove("show"); return; }
-      const days = daysInStock(item);
-      const bp = parseFloat(item.bp) || 0;
-      if (days < 14 && bp < 15) { card.classList.remove("show"); return; }
-      document.getElementById("suggestTitle").innerText = item.t || "Oggetto";
-      document.getElementById("suggestDays").innerText = days + " gg";
-      document.getElementById("suggestMeta").innerText =
-        (item.c || "Altro") + " · €" + bp.toFixed(2) + (days >= 30 ? " · critico" : "");
-      document.getElementById("suggestSellBtn").onclick = () => openSellSheet(item.id);
-      const dismissBtn = document.getElementById("suggestDismissBtn");
-      if (dismissBtn) dismissBtn.onclick = () => {
-        try { localStorage.setItem(suggestDismissKey(), "1"); } catch (e) {}
-        card.classList.remove("show");
-      };
-      card.classList.add("show");
+      if (card) card.classList.remove("show");
+      try { updateNotifBadge(); } catch (e) {}
     }
 
-    
     function shouldShowWelcome() {
       try {
         if (localStorage.getItem(ONBOARDING_KEY) === "1") return false;
@@ -3854,18 +3906,151 @@
 
     function updateGoalProgress(monthProfit) {
       const target = parseFloat(String(document.getElementById("targetGoalInput").value).replace(",", ".")) || 200;
-      const pct = Math.max(0, Math.round((monthProfit / target) * 100));
+      const pct = Math.max(0, Math.round((monthProfit / Math.max(target, 0.01)) * 100));
       const bar = document.getElementById("goalProgressBar");
       const txt = document.getElementById("goalPercentText");
-      
-      bar.style.width = Math.min(pct, 100) + "%";
-      if (pct >= 100) {
-        bar.classList.add("goal-complete");
-        txt.innerHTML = `${pct}% 🏆`;
-      } else {
-        bar.classList.remove("goal-complete");
-        txt.innerText = pct + "%";
+      if (bar) {
+        bar.style.width = Math.min(pct, 100) + "%";
+        if (pct >= 100) bar.classList.add("goal-complete");
+        else bar.classList.remove("goal-complete");
       }
+      if (txt) txt.innerText = pct + (pct >= 100 ? "% 🏆" : "%");
+      const headerPct = document.getElementById("headerGoalPct");
+      if (headerPct) headerPct.textContent = Math.min(pct, 999) + "%";
+      try { updateNotifBadge(); } catch (e) {}
+    }
+
+    function monthNameIt(d) {
+      const names = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+      return names[d.getMonth()];
+    }
+    function daysLeftInMonth() {
+      const n = new Date();
+      const end = new Date(n.getFullYear(), n.getMonth() + 1, 0);
+      return end.getDate() - n.getDate() + 1;
+    }
+    function openGoalModal() {
+      const target = parseFloat(String(document.getElementById("targetGoalInput").value).replace(",", ".")) || 200;
+      const net = lastMonthProfit || 0;
+      const pct = Math.max(0, Math.round((net / Math.max(target, 0.01)) * 100));
+      const left = Math.max(0, target - net);
+      const days = daysLeftInMonth();
+      const perDay = days > 0 ? left / days : left;
+      document.getElementById("goalModalTitle").textContent = "Obiettivo di " + monthNameIt(new Date());
+      document.getElementById("goalModalPct").textContent = pct + "%";
+      document.getElementById("goalModalBar").style.width = Math.min(pct, 100) + "%";
+      document.getElementById("goalModalNet").textContent = "€" + net.toFixed(2).replace(".", ",");
+      document.getElementById("goalModalTarget").textContent = "€" + target.toFixed(2).replace(".", ",");
+      document.getElementById("goalModalLeft").textContent = "€" + left.toFixed(2).replace(".", ",");
+      document.getElementById("goalModalDays").textContent = days + " gg";
+      let hint;
+      if (pct >= 100) hint = "🔥 Obiettivo raggiunto!";
+      else if (pct >= 70) hint = "Ancora in linea · €" + perDay.toFixed(2).replace(".", ",") + " al giorno per chiudere";
+      else if (pct >= 40) hint = "Un po' sotto · €" + perDay.toFixed(2).replace(".", ",") + " al giorno";
+      else hint = "Ritmo basso · €" + perDay.toFixed(2).replace(".", ",") + " al giorno per recuperare";
+      document.getElementById("goalModalHint").textContent = hint;
+      document.getElementById("goalModal").classList.add("show");
+    }
+    function closeGoalModal() {
+      document.getElementById("goalModal").classList.remove("show");
+    }
+    function editGoalFromModal() {
+      const cur = document.getElementById("targetGoalInput").value || "200";
+      const v = prompt("Obiettivo netto del mese (€)", cur);
+      if (v == null) return;
+      const n = parseFloat(String(v).replace(",", "."));
+      if (isNaN(n) || n <= 0) return notify("Inserisci un importo valido");
+      document.getElementById("targetGoalInput").value = String(n);
+      updateGoal();
+      openGoalModal();
+      notify("Obiettivo aggiornato a €" + n.toFixed(2));
+    }
+
+    function buildNotifications() {
+      const list = [];
+      const pending = getPendingBalance();
+      if (pending.n > 0) {
+        list.push({
+          ico: "💰",
+          title: pending.n + " vendite in attesa",
+          sub: "€" + pending.sum.toFixed(2).replace(".", ",") + " netti da incassare",
+          action: () => { closeNotifPanel(); setStatusFilter("sold"); }
+        });
+      }
+      const locked = getLockedCapital();
+      if (locked.n > 0) {
+        list.push({
+          ico: "🚨",
+          title: locked.n + " pezzi fermi",
+          sub: "€" + locked.sum.toFixed(2).replace(".", ",") + " · " + getCriticalDays() + "+ giorni",
+          action: () => {
+            closeNotifPanel();
+            filterCriticalOnly = true; filterFreshOnly = false;
+            try { updateFilterChips(); } catch (e) {}
+            setStatusFilter("stock");
+          }
+        });
+      }
+      let ts = 0;
+      try { ts = parseInt(localStorage.getItem(LAST_BACKUP_KEY) || "0", 10) || 0; } catch (e) {}
+      const days = ts ? Math.floor((Date.now() - ts) / 86400000) : 999;
+      if (!ts || days >= 7) {
+        list.push({
+          ico: "💾",
+          title: ts ? "Backup vecchio di " + days + " giorni" : "Nessun backup recente",
+          sub: "Consigliato backup completo con foto",
+          action: () => { closeNotifPanel(); openDataModal(); }
+        });
+      }
+      const target = parseFloat(String(document.getElementById("targetGoalInput").value).replace(",", ".")) || 200;
+      const net = lastMonthProfit || 0;
+      const pct = Math.round((net / Math.max(target, 0.01)) * 100);
+      if (pct >= 100) {
+        list.push({
+          ico: "🎯",
+          title: "Obiettivo mese raggiunto",
+          sub: pct + "% · €" + net.toFixed(2).replace(".", ","),
+          action: () => { closeNotifPanel(); openGoalModal(); }
+        });
+      } else if (pct < 40 && new Date().getDate() > 10) {
+        list.push({
+          ico: "🎯",
+          title: "Obiettivo mese al " + pct + "%",
+          sub: "Mancano €" + Math.max(0, target - net).toFixed(2).replace(".", ","),
+          action: () => { closeNotifPanel(); openGoalModal(); }
+        });
+      }
+      return list;
+    }
+    function updateNotifBadge() {
+      const n = buildNotifications().length;
+      const badge = document.getElementById("notifBadge");
+      if (!badge) return;
+      badge.textContent = String(n);
+      badge.classList.toggle("show", n > 0);
+    }
+    function openNotifPanel() {
+      const box = document.getElementById("notifList");
+      const items = buildNotifications();
+      if (!items.length) {
+        box.innerHTML = '<div class="notif-empty">Tutto a posto ✨<br><span style="font-size:0.75rem;font-weight:600;">Nessun avviso per ora</span></div>';
+      } else {
+        box.innerHTML = "";
+        items.forEach((it, idx) => {
+          const row = document.createElement("div");
+          row.className = "notif-item";
+          row.innerHTML = '<div class="ni-ico">' + it.ico + '</div><div><div class="ni-title"></div><div class="ni-sub"></div></div>';
+          row.querySelector(".ni-title").textContent = it.title;
+          row.querySelector(".ni-sub").textContent = it.sub;
+          row.onclick = it.action;
+          box.appendChild(row);
+        });
+      }
+      document.getElementById("notifPanel").classList.add("show");
+      updateNotifBadge();
+    }
+    function closeNotifPanel() {
+      document.getElementById("notifPanel").classList.remove("show");
     }
 
     function renderCharts() {
@@ -4643,6 +4828,35 @@
       try { showWelcomeIfNeeded(); } catch (e) {}
     });
   </script>
+
+  
+  <div class="goal-modal-overlay" id="goalModal" onclick="if(event.target===this)closeGoalModal()">
+    <div class="goal-modal-card" onclick="event.stopPropagation()">
+      <button type="button" onclick="closeGoalModal()" style="float:right;border:none;background:transparent;color:var(--text-muted);font-size:1.1rem;cursor:pointer;">✕</button>
+      <h3 id="goalModalTitle">Obiettivo del mese</h3>
+      <div class="goal-pct" id="goalModalPct">0%</div>
+      <div class="goal-modal-bar"><div id="goalModalBar"></div></div>
+      <div class="goal-rows">
+        <div class="goal-row"><span>Netto mese</span><span id="goalModalNet">€0,00</span></div>
+        <div class="goal-row"><span>Obiettivo</span><span id="goalModalTarget">€200,00</span></div>
+        <div class="goal-row"><span>Mancano</span><span id="goalModalLeft">€0,00</span></div>
+        <div class="goal-row"><span>Giorni rimasti</span><span id="goalModalDays">—</span></div>
+      </div>
+      <div class="goal-hint" id="goalModalHint">—</div>
+      <div class="goal-actions">
+        <button type="button" class="goal-btn-primary" onclick="editGoalFromModal()">✏️ Modifica obiettivo</button>
+        <button type="button" class="goal-btn-secondary" onclick="closeGoalModal(); filterThisMonth();">📊 Vedi vendite del mese</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="notif-overlay" id="notifPanel" onclick="if(event.target===this)closeNotifPanel()">
+    <div class="notif-card" onclick="event.stopPropagation()">
+      <button type="button" onclick="closeNotifPanel()" style="float:right;border:none;background:transparent;color:var(--text-muted);font-size:1.1rem;cursor:pointer;">✕</button>
+      <h3>🔔 Avvisi</h3>
+      <div id="notifList"></div>
+    </div>
+  </div>
 
   <div id="welcomeOverlay" class="welcome-overlay hidden" onclick="if(event.target===this)dismissWelcome(false)">
     <div class="welcome-card" onclick="event.stopPropagation()">
