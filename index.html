@@ -3516,12 +3516,7 @@
               ${isSold && item.pendingPayout ? '<span class="badge-pending">In attesa</span>' : ""}
               ${srcBadge} ${esc(item.c)} • ${bpText} (${esc(item.d)})
               ${!isSold ? `<br><span class="days-tag" style="color:${days > 30 ? 'var(--danger-color)' : (days >= 15 ? 'var(--warn-color)' : 'var(--success-color)')}">⏳ In stock da ${days} giorni</span>` : ""}
-              ${!isSold ? `<br><button type="button" class="rk-action-btn" data-action="listed" data-id="${item.id}" style="margin-top:4px;font-size:0.7rem;font-weight:800;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);border-radius:8px;padding:4px 8px;cursor:pointer;">${item.listed ? "Togli da In vendita" : "Segna In vendita"}</button>` : ""}
               ${isSold ? `<br>Vend: €${sp.toFixed(2)} ${soldPlatBadge} (${esc(item.soldDate||"-")}) ${roiHtml}` : ""}
-              ${isSold ? (item.pendingPayout
-                ? `<br><button type="button" class="rk-action-btn" data-action="collect" data-id="${item.id}" style="margin-top:4px;font-size:0.72rem;font-weight:800;border:none;background:linear-gradient(145deg,#fbbf24,#d97706);color:#1c1917;border-radius:8px;padding:6px 10px;cursor:pointer;">Segna incassato</button>`
-                : `<br><button type="button" class="rk-action-btn" data-action="pending" data-id="${item.id}" style="margin-top:4px;font-size:0.7rem;font-weight:800;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);border-radius:8px;padding:4px 8px;cursor:pointer;">Segna in attesa incasso</button>`
-              ) : ""}
             </div>
           </div>
           <div class="arrow-icon" style="color:var(--text-muted);font-size:1.2rem;">➔</div>
@@ -3572,36 +3567,66 @@
           }
         }, {passive:true});
 
-        card.addEventListener("touchend", () => {
+        card.addEventListener("touchend", (e) => {
           card.style.transition = "transform 0.25s ease-out";
           card.style.transform = "translateX(0)";
+          if (e.target && e.target.closest && e.target.closest("button")) {
+            isSwiping = false; currentX = 0; return;
+          }
           if (currentX > 50 && !isSold) openSellSheet(item.id);
           else if (currentX < -50) openEditModal(item.id);
           setTimeout(() => { isSwiping = false; currentX = 0; }, 100);
         });
 
+        // Azioni fuori dalla card swipe (evita conflitto con modifica)
+        const actions = document.createElement("div");
+        actions.className = "item-actions-row";
+        actions.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;padding:0 4px 10px 4px;";
+        if (!isSold) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.textContent = item.listed ? "Togli da In vendita" : "Segna In vendita";
+          b.style.cssText = "font-size:0.72rem;font-weight:800;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);border-radius:8px;padding:8px 10px;cursor:pointer;";
+          b.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); toggleListed(item.id); });
+          actions.appendChild(b);
+        } else {
+          const b = document.createElement("button");
+          b.type = "button";
+          if (item.pendingPayout) {
+            b.textContent = "Segna incassato";
+            b.style.cssText = "font-size:0.72rem;font-weight:800;border:none;background:linear-gradient(145deg,#fbbf24,#d97706);color:#1c1917;border-radius:8px;padding:8px 10px;cursor:pointer;";
+            b.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); markPayoutReceived(item.id); });
+          } else {
+            b.textContent = "Segna in attesa incasso";
+            b.style.cssText = "font-size:0.72rem;font-weight:800;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);border-radius:8px;padding:8px 10px;cursor:pointer;";
+            b.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); markPayoutPending(item.id); });
+          }
+          actions.appendChild(b);
+        }
+
+        let ignoreCardClick = false;
+        card.addEventListener("touchstart", e => {
+          if (e.target && e.target.closest && e.target.closest("button")) ignoreCardClick = true;
+        }, true);
+
         card.onclick = (e) => {
+          if (ignoreCardClick) { ignoreCardClick = false; return; }
           if (isSwiping) return;
-          if (e.target && e.target.closest && e.target.closest("button")) return;
+          if (e.target && e.target.closest && (e.target.closest("button") || e.target.closest(".item-actions-row"))) return;
           openEditModal(item.id);
         };
 
-        card.querySelectorAll(".rk-action-btn").forEach(btn => {
-          const stop = (ev) => { ev.stopPropagation(); ev.preventDefault(); };
-          btn.addEventListener("click", (ev) => {
-            stop(ev);
-            const id = btn.getAttribute("data-id");
-            const action = btn.getAttribute("data-action");
-            if (action === "listed") toggleListed(id);
-            else if (action === "collect") markPayoutReceived(id);
-            else if (action === "pending") markPayoutPending(id);
-          });
-          btn.addEventListener("touchend", (ev) => { stop(ev); }, { passive: false });
-        });
+        // Blocca apertura modifica se il touch è sui bottoni azione (sotto)
+        actions.addEventListener("touchstart", (e) => { e.stopPropagation(); ignoreCardClick = true; }, { passive: true });
+        actions.addEventListener("click", (e) => { e.stopPropagation(); });
 
         wrapper.appendChild(swipeBg);
         wrapper.appendChild(card);
-        listEl.appendChild(wrapper);
+        const outer = document.createElement("div");
+        outer.style.cssText = "margin-bottom:8px;";
+        outer.appendChild(wrapper);
+        outer.appendChild(actions);
+        listEl.appendChild(outer);
       });
     }
 
