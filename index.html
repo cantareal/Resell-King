@@ -1137,7 +1137,7 @@
       <div class="filter-chip-row" id="listedFilterChips">
         <button type="button" class="filter-chip on listed-chip" data-mode="all" onclick="setListedFilter('all')">Tutti</button>
         <button type="button" class="filter-chip listed-chip" data-mode="listed" onclick="setListedFilter('listed')">In vendita</button>
-        <button type="button" class="filter-chip listed-chip" data-mode="unlisted" onclick="setListedFilter('unlisted')">Non pubblicati</button>
+        <button type="button" class="filter-chip listed-chip" data-mode="unlisted" onclick="setListedFilter('unlisted')">Da pubblicare</button>
       </div>
       <div class="filters-panel" id="filtersPanel">
       <div class="filter-row">
@@ -3416,8 +3416,11 @@
           if (filterFreshOnly) matchStockAge = d <= 7;
         }
         let matchListed = true;
-        if (item.s === "stock" && filterListedMode === "listed") matchListed = !!item.listed;
-        if (item.s === "stock" && filterListedMode === "unlisted") matchListed = !item.listed;
+        if (filterListedMode === "listed") {
+          matchListed = item.s === "stock" && !!item.listed;
+        } else if (filterListedMode === "unlisted") {
+          matchListed = item.s === "stock" && !item.listed;
+        }
         return matchSearch && matchCat && matchPlat && matchStatus && matchMonth && matchStockAge && matchListed;
       });
 
@@ -3525,7 +3528,7 @@
                 ? `<span class="badge-listed rk-badge-tap" data-badge="listed" data-id="${item.id}">In vendita</span>`
                 : `<span class="badge-unlisted rk-badge-tap" data-badge="listed" data-id="${item.id}">Non pubblicato</span>`
               ) : ""}
-              ${isSold && item.pendingPayout ? `<span class="badge-pending rk-badge-tap" data-badge="pending" data-id="${item.id}">In attesa</span>` : ""}
+              ${isSold && item.pendingPayout ? `<span class="badge-pending">In attesa</span>` : ""}
               ${srcBadge} ${esc(item.c)} • ${bpText} (${esc(item.d)})
               ${!isSold ? `<br><span class="days-tag" style="color:${days > 30 ? 'var(--danger-color)' : (days >= 15 ? 'var(--warn-color)' : 'var(--success-color)')}">⏳ In stock da ${days} giorni</span>` : ""}
               ${isSold ? `<br>Vend: €${sp.toFixed(2)} ${soldPlatBadge} (${esc(item.soldDate||"-")}) ${roiHtml}` : ""}
@@ -3618,7 +3621,28 @@
 
         wrapper.appendChild(swipeBg);
         wrapper.appendChild(card);
-        listEl.appendChild(wrapper);
+
+        if (isSold && item.pendingPayout) {
+          const collectRow = document.createElement("div");
+          collectRow.style.cssText = "display:flex;justify-content:flex-end;padding:0 6px 8px;margin-top:-4px;";
+          const cb = document.createElement("button");
+          cb.type = "button";
+          cb.textContent = "💰 Segna incassato";
+          cb.style.cssText = "font-size:0.72rem;font-weight:800;border:none;background:linear-gradient(145deg,#fbbf24,#d97706);color:#1c1917;border-radius:8px;padding:8px 12px;cursor:pointer;";
+          cb.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            markPayoutReceived(item.id);
+          });
+          collectRow.appendChild(cb);
+          const outer = document.createElement("div");
+          outer.style.marginBottom = "4px";
+          outer.appendChild(wrapper);
+          outer.appendChild(collectRow);
+          listEl.appendChild(outer);
+        } else {
+          listEl.appendChild(wrapper);
+        }
 
       });
     }
