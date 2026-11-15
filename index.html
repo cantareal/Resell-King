@@ -987,41 +987,40 @@
       box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
     }
 
-    .info-tip-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 16px; height: 16px; margin-left: 4px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.55); background: rgba(0,0,0,0.18);
-      color: #fff; font-size: 0.65rem; font-weight: 900; cursor: pointer;
-      vertical-align: middle; position: relative; z-index: 2; padding: 0; line-height: 1;
-    }
-    .stats-summary-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;
-    }
-    .stats-mini-card {
-      background: var(--card-bg); border: 1px solid var(--border-color);
-      border-radius: 12px; padding: 12px; cursor: pointer;
-    }
-    .stats-mini-card .sm-label { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-    .stats-mini-card .sm-val { font-size: 1.05rem; font-weight: 900; margin-top: 4px; font-variant-numeric: tabular-nums; }
-    .stats-mini-card .sm-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; font-weight: 600; }
-    .stats-mini-card.warn { border-color: rgba(251,191,36,0.45); background: linear-gradient(145deg, rgba(251,191,36,0.12), transparent); }
-    .backup-reminder {
-      display: none; margin-bottom: 10px; padding: 10px 12px; border-radius: 12px;
-      border: 1px solid rgba(251,191,36,0.45); background: rgba(251,191,36,0.12);
-      font-size: 0.78rem; font-weight: 700; color: var(--text-color);
-      align-items: center; justify-content: space-between; gap: 8px;
-    }
-    .backup-reminder.show { display: flex; }
-    .backup-reminder button {
-      flex-shrink: 0; border: none; border-radius: 8px; padding: 8px 10px;
-      font-size: 0.72rem; font-weight: 800; cursor: pointer;
-      background: linear-gradient(145deg, #fbbf24, #d97706); color: #1c1917;
-    }
-    .cat-add-row { display: flex; gap: 6px; margin-top: 6px; }
-    .cat-add-row button {
-      border: 1px dashed var(--border-color); background: var(--input-bg); color: var(--text-muted);
-      border-radius: 8px; padding: 8px 10px; font-size: 0.75rem; font-weight: 800; cursor: pointer; width: 100%;
-    }
+    .info-tip-btn { display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:4px;border-radius:50%;border:1px solid rgba(255,255,255,0.55);background:rgba(0,0,0,0.18);color:#fff;font-size:0.65rem;font-weight:900;cursor:pointer;vertical-align:middle;position:relative;z-index:2;padding:0;line-height:1; }
+    .stats-summary-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px; }
+    .stats-mini-card { background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:12px;cursor:pointer; }
+    .stats-mini-card .sm-label { font-size:0.68rem;font-weight:800;color:var(--text-muted);text-transform:uppercase; }
+    .stats-mini-card .sm-val { font-size:1.05rem;font-weight:900;margin-top:4px;font-variant-numeric:tabular-nums; }
+    .stats-mini-card .sm-sub { font-size:0.7rem;color:var(--text-muted);margin-top:2px;font-weight:600; }
+    .stats-mini-card.warn { border-color:rgba(251,191,36,0.45);background:linear-gradient(145deg,rgba(251,191,36,0.12),transparent); }
+    .backup-reminder { display:none;margin-bottom:10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(251,191,36,0.45);background:rgba(251,191,36,0.12);font-size:0.78rem;font-weight:700;color:var(--text-color);align-items:center;justify-content:space-between;gap:8px; }
+    .backup-reminder.show { display:flex; }
+    .backup-reminder button { flex-shrink:0;border:none;border-radius:8px;padding:8px 10px;font-size:0.72rem;font-weight:800;cursor:pointer;background:linear-gradient(145deg,#fbbf24,#d97706);color:#1c1917; }
+    .cat-add-row { display:flex;gap:6px;margin-top:6px; }
+    .cat-add-row button { border:1px dashed var(--border-color);background:var(--input-bg);color:var(--text-muted);border-radius:8px;padding:8px 10px;font-size:0.75rem;font-weight:800;cursor:pointer;width:100%; }
+    .badge-listed { background:#1e3a8a;color:#93c5fd;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:6px;margin-left:4px; }
+    [data-theme="light"] .badge-listed { background:#dbeafe;color:#1e40af; }
+    .badge-pending { background:#78350f;color:#fde68a;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:6px; }
+    [data-theme="light"] .badge-pending { background:#fef3c7;color:#92400e; }
+    .period-summary { background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;padding:12px;margin-bottom:12px; }
+    .period-summary h3 { font-size:0.88rem;margin-bottom:8px; }
+    .period-summary .ps-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+    .period-summary .ps-item { background:var(--input-bg);border-radius:8px;padding:8px; }
+    .period-summary .ps-item .ps-l { font-size:0.65rem;color:var(--text-muted);font-weight:800;text-transform:uppercase; }
+    .period-summary .ps-item .ps-v { font-size:0.95rem;font-weight:900;margin-top:2px;font-variant-numeric:tabular-nums; }
+    .missions-box { background:var(--card-bg);border:1px solid var(--border-color);border-radius:14px;padding:12px;margin-bottom:12px; }
+    .missions-box h3 { font-size:0.9rem;margin-bottom:8px; }
+    .mission-row { display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;font-weight:700; }
+    .mission-row:last-child { border-bottom:none; }
+    .mission-row.done { opacity:0.75; }
+    .mission-prog { font-size:0.72rem;color:var(--text-muted);font-weight:800;white-space:nowrap; }
+    .mission-row.done .mission-prog { color:var(--success-color); }
+    .sheet-check { display:flex;align-items:center;gap:8px;margin:10px 0;font-size:0.82rem;font-weight:700;color:var(--text-color); }
+    .sheet-check input { width:18px;height:18px; }
+    .filter-chip-row { display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px; }
+    .filter-chip { border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-muted);border-radius:999px;padding:5px 10px;font-size:0.7rem;font-weight:800;cursor:pointer; }
+    .filter-chip.on { background:var(--accent-color);color:#fff;border-color:transparent; }
 
   </style>
 </head>
@@ -1048,12 +1047,12 @@
     </div>
     <div class="stat-card cash" onclick="openCashAdjust()" style="cursor:pointer;" title="Aggiusta Cassa">
       <button class="cash-adjust-btn" onclick="event.stopPropagation(); openCashAdjust()">✏️</button>
-      <div class="label">Cassa Disponibile <button type="button" class="info-tip-btn" onclick="event.stopPropagation(); showInfoTip('cash')" title="Info">i</button></div>
+      <div class="label">Cassa Disponibile <button type="button" class="info-tip-btn" onclick="event.stopPropagation(); showInfoTip('cash')">i</button></div>
       <div class="val" id="statCash">€0.00</div>
     </div>
     <div class="stat-card profit" onclick="filterAllSold()" style="cursor:pointer;" title="Tutti i venduti">
       <span class="stat-icon">📈</span>
-      <div class="label">Profitto Netto Totale <button type="button" class="info-tip-btn" onclick="event.stopPropagation(); showInfoTip('profit')" title="Info">i</button></div>
+      <div class="label">Profitto Netto Totale <button type="button" class="info-tip-btn" onclick="event.stopPropagation(); showInfoTip('profit')">i</button></div>
       <div class="val" id="statProfit">€0.00</div>
     </div>
     <div class="stat-card month" onclick="filterThisMonth()" style="cursor:pointer;" title="Mostra vendite questo mese">
@@ -1088,11 +1087,7 @@
     </div>
   </div>
 
-  <div id="homeBackupReminder" class="backup-reminder" style="margin-bottom:10px;">
-    <span id="homeBackupReminderText">Fai un backup con foto</span>
-    <button type="button" onclick="downloadBackup(true)">Backup + foto</button>
-  </div>
-
+  <div id="homeBackupReminder" class="backup-reminder"><span id="homeBackupReminderText">Fai un backup con foto</span><button type="button" onclick="downloadBackup(true)">Backup + foto</button></div>
   <div class="status-tabs">
     <button class="tab-btn active" data-tab="ALL" id="tabALL" onclick="setStatusFilter('ALL')">
       <span class="tab-count" id="countAll">0</span>
@@ -1116,7 +1111,7 @@
     </button>
     <button class="tab-btn" data-tab="STATS" id="tabSTATS" onclick="setStatusFilter('STATS')">
       <span class="tab-ico">📊</span>
-      Grafici
+      Statistiche
     </button>
   </div>
 
@@ -1136,14 +1131,16 @@
         <span class="ft-left">⚙️ Filtri <span id="filtersActiveHint" style="opacity:.8;font-weight:700;"></span></span>
         <span class="ft-chevron" id="filtersChevron">▶</span>
       </button>
+      <div class="filter-chip-row" id="listedFilterChips">
+        <button type="button" class="filter-chip on listed-chip" data-mode="all" onclick="setListedFilter('all')">Tutti</button>
+        <button type="button" class="filter-chip listed-chip" data-mode="listed" onclick="setListedFilter('listed')">In vendita</button>
+        <button type="button" class="filter-chip listed-chip" data-mode="unlisted" onclick="setListedFilter('unlisted')">Non pubblicati</button>
+      </div>
       <div class="filters-panel" id="filtersPanel">
       <div class="filter-row">
         <div>
           <label>CATEGORIA</label>
-          <select id="filterCategory" onchange="renderApp()">
-            <option value="ALL">Tutte</option>
-          </select>
-          <div class="cat-add-row"><button type="button" onclick="promptAddCategory('filterCategory')">+ Categoria</button></div>
+          <select id="filterCategory" onchange="renderApp()"><option value="ALL">Tutte</option></select><div class="cat-add-row"><button type="button" onclick="promptAddCategory('filterCategory')">+ Categoria</button></div>
         </div>
         <div>
           <label>PIATTAFORMA</label>
@@ -1196,33 +1193,14 @@
 
   <div id="chartsView">
     <div class="stats-summary-grid">
-      <div class="stats-mini-card warn" onclick="filterCriticalOnly=true;filterFreshOnly=false;updateFilterChips();setStatusFilter('stock')">
-        <div class="sm-label">Capitale bloccato</div>
-        <div class="sm-val" id="statsLockedVal">€0,00</div>
-        <div class="sm-sub" id="statsLockedSub">pezzi fermi da 30+ giorni</div>
-      </div>
-      <div class="stats-mini-card">
-        <div class="sm-label">Fee totali pagate</div>
-        <div class="sm-val" id="statsFeesVal">€0,00</div>
-        <div class="sm-sub">commissioni sulle vendite</div>
-      </div>
-      <div class="stats-mini-card">
-        <div class="sm-label">ROI medio</div>
-        <div class="sm-val" id="statsRoiVal">—</div>
-        <div class="sm-sub">solo pezzi venduti</div>
-      </div>
-      <div class="stats-mini-card">
-        <div class="sm-label">Giorni medi in stock</div>
-        <div class="sm-val" id="statsDaysVal">—</div>
-        <div class="sm-sub">tempo medio alla vendita</div>
-      </div>
+      <div class="stats-mini-card warn" onclick="filterCriticalOnly=true;filterFreshOnly=false;updateFilterChips();setStatusFilter('stock')"><div class="sm-label">Capitale bloccato</div><div class="sm-val" id="statsLockedVal">€0,00</div><div class="sm-sub" id="statsLockedSub">pezzi fermi 30+ gg</div></div>
+      <div class="stats-mini-card" onclick="setStatusFilter('sold')"><div class="sm-label">Saldo in attesa</div><div class="sm-val" id="statsPendingVal">€0,00</div><div class="sm-sub" id="statsPendingSub">non ancora in cassa</div></div>
+      <div class="stats-mini-card"><div class="sm-label">Fee totali</div><div class="sm-val" id="statsFeesVal">€0,00</div><div class="sm-sub">commissioni vendite</div></div>
+      <div class="stats-mini-card"><div class="sm-label">ROI medio</div><div class="sm-val" id="statsRoiVal">—</div><div class="sm-sub">pezzi venduti</div></div>
     </div>
-    <div class="chart-container" style="height:auto;min-height:0;padding:12px;">
-      <h3 style="margin:0 0 6px;">Come leggere i grafici</h3>
-      <p style="font-size:0.75rem;color:var(--text-muted);margin:0;line-height:1.4;font-weight:600;">
-        I profitti sono <strong>netti</strong> (vendita − acquisto − fee). Il capitale bloccato è il costo d'acquisto dei pezzi in stock da 30+ giorni — non è cassa.
-      </p>
-    </div>
+    <div class="period-summary"><h3>📅 Riepilogo settimana</h3><div class="ps-grid" id="weekSummaryGrid"></div></div>
+    <div class="period-summary"><h3>🗓️ Riepilogo mese</h3><div class="ps-grid" id="monthSummaryGrid"></div></div>
+    <div class="chart-container" style="height:auto;min-height:0;padding:12px;"><h3 style="margin:0 0 6px;">Come leggere i grafici</h3><p style="font-size:0.75rem;color:var(--text-muted);margin:0;line-height:1.4;font-weight:600;">Netto = vendita − acquisto − fee. Capitale bloccato = stock 30+ gg. In attesa = venduto ma non in cassa.</p></div>
     <div class="chart-container">
       <h3>Tempo Medio di Vendita (Giorni) per Categoria</h3>
       <canvas id="leadTimeChart"></canvas>
@@ -1242,6 +1220,7 @@
   </div>
 
   <div id="trophiesView">
+    <div class="missions-box"><h3>🎯 Missioni di questa settimana</h3><div id="weeklyMissionsList"></div></div>
     <div class="trophy-hero">
       <h2>🏆 Hall of Fame & Trofei</h2>
       <div class="level-chip-badge" id="userLevelTitle">Livello 1 · Avvio</div>
@@ -1443,10 +1422,7 @@
       <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">
         Gestisci i tuoi dati contabili, effettua salvataggi manuali o esporta il registro.
       </p>
-      <div id="backupReminderBox" class="backup-reminder">
-        <span id="backupReminderText">Backup consigliato</span>
-        <button type="button" onclick="downloadBackup(true); closeModal('dataModal');">Backup + foto</button>
-      </div>
+      <div id="backupReminderBox" class="backup-reminder"><span id="backupReminderText">Backup consigliato</span><button type="button" onclick="downloadBackup(true); closeModal('dataModal');">Backup + foto</button></div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <button class="btn-sync green" onclick="manualSave(); closeModal('dataModal');">💾 Salva Modifiche Locale</button>
         <button class="btn-sync" onclick="openTrashModal(); closeModal('dataModal');">🗑️ Cestino (elementi eliminati)</button>
@@ -1498,8 +1474,7 @@
         </div>
         <div>
           <label style="font-size:0.75rem;font-weight:700;">CATEGORIA</label>
-          <select id="addCategory"></select>
-          <div class="cat-add-row"><button type="button" onclick="promptAddCategory('addCategory')">+ Nuova categoria</button></div>
+          <select id="addCategory"></select><div class="cat-add-row"><button type="button" onclick="promptAddCategory('addCategory')">+ Nuova categoria</button></div>
         </div>
         <div>
           <label style="font-size:0.75rem;font-weight:700;">FONTE</label>
@@ -1565,8 +1540,7 @@
         </div>
         <div>
           <label style="font-size:0.75rem;font-weight:700;">CATEGORIA PREDEFINITA</label>
-          <select id="lotCategory"></select>
-          <div class="cat-add-row"><button type="button" onclick="promptAddCategory('lotCategory')">+ Nuova categoria</button></div>
+          <select id="lotCategory"></select><div class="cat-add-row"><button type="button" onclick="promptAddCategory('lotCategory')">+ Nuova categoria</button></div>
         </div>
         <div>
           <label style="font-size:0.75rem;font-weight:700;">FONTE</label>
@@ -1644,8 +1618,7 @@
         </div>
         <div>
           <label style="font-size:0.75rem;font-weight:700;">CATEGORIA</label>
-          <select id="editCategory"></select>
-          <div class="cat-add-row"><button type="button" onclick="promptAddCategory('editCategory')">+ Nuova categoria</button></div>
+          <select id="editCategory"></select><div class="cat-add-row"><button type="button" onclick="promptAddCategory('editCategory')">+ Nuova categoria</button></div>
         </div>
         <div>
           <label style="font-size:0.75rem;font-weight:700;">FONTE</label>
@@ -1794,10 +1767,10 @@
         <div class="sheet-price-group">
           <label>COMMISSIONI (€)</label>
           <input type="number" id="sheetSellFee" step="0.10" class="sheet-fee-input" placeholder="0.00">
-          <p style="font-size:0.68rem;color:var(--text-muted);margin:4px 0 0;font-weight:600;">Default 0 · se hai una fee, inseriscila. L'ultima usata per piattaforma viene ricordata.</p>
         </div>
       </div>
 
+      <label class="sheet-check"><input type="checkbox" id="sheetPayoutReceived" checked> Incasso già ricevuto (se no → saldo in attesa)</label>
       <label style="font-size:0.75rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:8px;">PIATTAFORMA:</label>
       <div class="sheet-platform-grid">
         <button type="button" class="btn-sheet-platform btn-p-vinted" onclick="confirmSheetSell('Vinted')"><span class="p-icon">V</span> Vinted</button>
@@ -1819,149 +1792,6 @@
     const THEME_KEY = "reselling_pro_max_theme";
     const VIEW_MODE_KEY = "reselling_pro_max_view_mode";
     const USER_NICK_KEY = "reselling_pro_user_nick";
-
-    const DEFAULT_CATEGORIES = [
-      "Gaming / Videogiochi", "Abbigliamento", "Scarpe", "Borse & Accessori",
-      "Elettronica", "Libri", "Casa & Cucina", "Bambini & Giocattoli",
-      "Sport & Outdoor", "Collezionismo", "Bellezza & Cura", "Altro"
-    ];
-    const CUSTOM_CATS_KEY = "resell_king_custom_cats_v1";
-    const LAST_FEE_KEY = "resell_king_last_fee_by_platform_v1";
-    const LAST_BACKUP_KEY = "resell_king_last_backup_ts_v1";
-    let lastSaleUndo = null;
-    let lastSaleUndoTimer = null;
-
-    function loadCustomCategories() {
-      try {
-        const arr = JSON.parse(localStorage.getItem(CUSTOM_CATS_KEY) || "[]");
-        return Array.isArray(arr) ? arr.map(String).filter(Boolean) : [];
-      } catch (e) { return []; }
-    }
-    function saveCustomCategories(arr) {
-      try { localStorage.setItem(CUSTOM_CATS_KEY, JSON.stringify(arr)); } catch (e) {}
-    }
-    function getAllCategories() {
-      const custom = loadCustomCategories();
-      const fromDb = [];
-      db.forEach(i => { if (i && i.c) fromDb.push(String(i.c)); });
-      const all = [...DEFAULT_CATEGORIES, ...custom, ...fromDb];
-      const seen = new Set();
-      const out = [];
-      all.forEach(c => {
-        const t = String(c || "").trim();
-        if (!t || seen.has(t)) return;
-        seen.add(t);
-        out.push(t);
-      });
-      return out;
-    }
-    function fillCategorySelect(sel, opts) {
-      if (!sel) return;
-      const keepAll = opts && opts.includeAll;
-      const current = sel.value;
-      const cats = getAllCategories();
-      sel.innerHTML = keepAll ? '<option value="ALL">Tutte</option>' : '';
-      cats.forEach(c => {
-        const o = document.createElement("option");
-        o.value = c;
-        o.textContent = c.replace("Gaming / Videogiochi", "Gaming");
-        sel.appendChild(o);
-      });
-      if (current && [...sel.options].some(o => o.value === current)) sel.value = current;
-      else if (!keepAll && sel.options.length) sel.selectedIndex = 0;
-    }
-    function refreshAllCategorySelects() {
-      fillCategorySelect(document.getElementById("filterCategory"), { includeAll: true });
-      fillCategorySelect(document.getElementById("addCategory"));
-      fillCategorySelect(document.getElementById("editCategory"));
-      fillCategorySelect(document.getElementById("lotCategory"));
-    }
-    function promptAddCategory(selectId) {
-      const name = prompt("Nome nuova categoria:");
-      if (!name || !name.trim()) return;
-      const t = name.trim().slice(0, 40);
-      const custom = loadCustomCategories();
-      if (![...DEFAULT_CATEGORIES, ...custom].includes(t)) {
-        custom.push(t);
-        saveCustomCategories(custom);
-      }
-      refreshAllCategorySelects();
-      const sel = document.getElementById(selectId);
-      if (sel) sel.value = t;
-      notify("Categoria aggiunta: " + t);
-    }
-
-    function loadLastFees() {
-      try { return JSON.parse(localStorage.getItem(LAST_FEE_KEY) || "{}") || {}; }
-      catch (e) { return {}; }
-    }
-    function rememberFee(platform, fee) {
-      const map = loadLastFees();
-      map[platform] = fee;
-      try { localStorage.setItem(LAST_FEE_KEY, JSON.stringify(map)); } catch (e) {}
-    }
-    function suggestedFeeFor(platform) {
-      const map = loadLastFees();
-      if (map[platform] != null && map[platform] !== "") return parseFloat(map[platform]) || 0;
-      return 0;
-    }
-
-    function showInfoTip(kind) {
-      const tips = {
-        cash: "Cassa disponibile\\n\\nStima del liquido: baseline + vendite − acquisti in stock − spese + aggiustamenti.\\nNon è il valore dello stock.",
-        profit: "Profitto netto totale\\n\\nSomma sulle vendite di: prezzo vendita − prezzo acquisto − commissioni.\\nLe spese extra (benzina, imballi) riducono il netto del mese e la cassa, non questo totale.",
-        locked: "Capitale bloccato\\n\\nSomma dei prezzi di acquisto dei pezzi ancora in stock da 30 giorni o più.\\nSoldi investiti fermi, diversi dalla cassa."
-      };
-      alert(tips[kind] || "");
-    }
-
-    function markBackupDone() {
-      try { localStorage.setItem(LAST_BACKUP_KEY, String(Date.now())); } catch (e) {}
-      updateBackupReminders();
-    }
-    function updateBackupReminders() {
-      let ts = 0;
-      try { ts = parseInt(localStorage.getItem(LAST_BACKUP_KEY) || "0", 10) || 0; } catch (e) {}
-      const days = ts ? Math.floor((Date.now() - ts) / 86400000) : null;
-      const need = !ts || days >= 7;
-      const text = !ts
-        ? "Nessun backup con foto recente. Consigliato per non perdere l'inventario."
-        : ("Ultimo backup: " + days + " giorni fa. Meglio rifarlo con foto.");
-      ["backupReminderBox", "homeBackupReminder"].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.classList.toggle("show", need);
-      });
-      const t1 = document.getElementById("backupReminderText");
-      const t2 = document.getElementById("homeBackupReminderText");
-      if (t1) t1.textContent = text;
-      if (t2) t2.textContent = text;
-    }
-
-    function getLockedCapital() {
-      let sum = 0, n = 0;
-      db.forEach(i => {
-        if (i.s !== "stock") return;
-        const d = daysInStock(i);
-        if (d >= 30) { sum += parseFloat(i.bp) || 0; n++; }
-      });
-      return { sum, n };
-    }
-
-    function undoLastSale() {
-      if (!lastSaleUndo) return notify("Nessuna vendita da annullare.");
-      const { id, snapshot } = lastSaleUndo;
-      const item = db.find(x => x.id === id);
-      if (!item) { lastSaleUndo = null; return notify("Oggetto non trovato."); }
-      Object.assign(item, snapshot);
-      lastSaleUndo = null;
-      if (lastSaleUndoTimer) { clearTimeout(lastSaleUndoTimer); lastSaleUndoTimer = null; }
-      try { document.getElementById("celebrateModal").style.display = "none"; } catch (e) {}
-      saveData();
-      notify("Vendita annullata · pezzo di nuovo in stock");
-    }
-
-
     const ONBOARDING_KEY = "resell_king_onboarding_v1";
     const SNAPSHOTS_KEY = "reselling_auto_snapshots_v1";
 
@@ -2557,6 +2387,44 @@
       }
     }
 
+
+    /* RK HELPERS */
+    const DEFAULT_CATEGORIES = ["Gaming / Videogiochi","Abbigliamento","Scarpe","Borse & Accessori","Elettronica","Libri","Casa & Cucina","Bambini & Giocattoli","Sport & Outdoor","Collezionismo","Bellezza & Cura","Altro"];
+    const CUSTOM_CATS_KEY = "resell_king_custom_cats_v1";
+    const LAST_FEE_KEY = "resell_king_last_fee_by_platform_v1";
+    const LAST_BACKUP_KEY = "resell_king_last_backup_ts_v1";
+    let lastSaleUndo = null, lastSaleUndoTimer = null, filterListedMode = "all";
+    (function(){ try{ [["cantareal_trophy_xp_v1","resell_king_trophy_xp_v1"],["cantareal_trophy_claimed_v1","resell_king_trophy_claimed_v1"],["cantareal_trophy_open_sec","resell_king_trophy_open_sec"]].forEach(([o,n])=>{ if(localStorage.getItem(n)==null&&localStorage.getItem(o)!=null) localStorage.setItem(n,localStorage.getItem(o)); }); }catch(e){} })();
+    function showInfoTip(kind){ const tips={cash:"Cassa disponibile\n\nLiquido stimato dalle vendite già incassate, meno acquisti e spese.\nEsclude stock e saldi in attesa.",profit:"Profitto netto totale\n\nPer ogni vendita: vendita − acquisto − fee.\nLe spese extra non entrano in questo totale.",locked:"Capitale bloccato\n\nCosto d'acquisto dei pezzi in stock da 30+ giorni."}; alert(tips[kind]||""); }
+    function loadCustomCategories(){ try{ const a=JSON.parse(localStorage.getItem(CUSTOM_CATS_KEY)||"[]"); return Array.isArray(a)?a.map(String).filter(Boolean):[]; }catch(e){ return []; } }
+    function saveCustomCategories(a){ try{ localStorage.setItem(CUSTOM_CATS_KEY, JSON.stringify(a)); }catch(e){} }
+    function getAllCategories(){ const all=[...DEFAULT_CATEGORIES,...loadCustomCategories()]; db.forEach(i=>{ if(i&&i.c) all.push(String(i.c)); }); const s=new Set(),o=[]; all.forEach(c=>{ const t=String(c||"").trim(); if(!t||s.has(t))return; s.add(t); o.push(t); }); return o; }
+    function fillCategorySelect(sel,opts){ if(!sel)return; const keepAll=opts&&opts.includeAll; const cur=sel.value; const cats=getAllCategories(); sel.innerHTML=keepAll?'<option value="ALL">Tutte</option>':''; cats.forEach(c=>{ const o=document.createElement("option"); o.value=c; o.textContent=c.replace("Gaming / Videogiochi","Gaming"); sel.appendChild(o); }); if(cur&&[...sel.options].some(o=>o.value===cur)) sel.value=cur; else if(!keepAll&&sel.options.length) sel.selectedIndex=0; }
+    function refreshAllCategorySelects(){ fillCategorySelect(document.getElementById("filterCategory"),{includeAll:true}); fillCategorySelect(document.getElementById("addCategory")); fillCategorySelect(document.getElementById("editCategory")); fillCategorySelect(document.getElementById("lotCategory")); }
+    function promptAddCategory(selectId){ const name=prompt("Nome nuova categoria:"); if(!name||!name.trim())return; const t=name.trim().slice(0,40); const custom=loadCustomCategories(); if(![...DEFAULT_CATEGORIES,...custom].includes(t)){ custom.push(t); saveCustomCategories(custom); } refreshAllCategorySelects(); const sel=document.getElementById(selectId); if(sel) sel.value=t; notify("Categoria aggiunta: "+t); }
+    function loadLastFees(){ try{ return JSON.parse(localStorage.getItem(LAST_FEE_KEY)||"{}")||{}; }catch(e){ return {}; } }
+    function rememberFee(platform,fee){ const m=loadLastFees(); m[platform]=fee; try{ localStorage.setItem(LAST_FEE_KEY, JSON.stringify(m)); }catch(e){} }
+    function suggestedFeeFor(platform){ const m=loadLastFees(); return m[platform]!=null?(parseFloat(m[platform])||0):0; }
+    function applyPlatformFeeHint(platform){ const feeInput=document.getElementById("sheetSellFee"); if(!feeInput)return; const cur=parseFloat(String(feeInput.value).replace(",", "."))||0; if(!feeInput.value||cur===0){ const sug=suggestedFeeFor(platform); feeInput.value=sug?String(sug):"0"; } }
+    function markBackupDone(){ try{ localStorage.setItem(LAST_BACKUP_KEY, String(Date.now())); }catch(e){} updateBackupReminders(); }
+    function updateBackupReminders(){ let ts=0; try{ ts=parseInt(localStorage.getItem(LAST_BACKUP_KEY)||"0",10)||0; }catch(e){} const days=ts?Math.floor((Date.now()-ts)/86400000):null; const need=!ts||days>=7; const text=!ts?"Nessun backup con foto recente. Consigliato per non perdere l'inventario.":("Ultimo backup: "+days+" giorni fa. Meglio rifarlo con foto."); ["backupReminderBox","homeBackupReminder"].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.toggle("show",need); }); const t1=document.getElementById("backupReminderText"); const t2=document.getElementById("homeBackupReminderText"); if(t1)t1.textContent=text; if(t2)t2.textContent=text; }
+    function getLockedCapital(){ let sum=0,n=0; db.forEach(i=>{ if(i.s!=="stock")return; if(daysInStock(i)>=30){ sum+=parseFloat(i.bp)||0; n++; } }); return {sum,n}; }
+    function getPendingBalance(){ let sum=0,n=0; db.forEach(i=>{ if(i.s==="sold"&&i.pendingPayout){ sum+=parseFloat(i.sp)||0; n++; } }); return {sum,n}; }
+    function playSaleFeedback(){ try{ if(navigator.vibrate) navigator.vibrate([40,40,70]); }catch(e){} try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return; const ctx=new AC(), now=ctx.currentTime; const master=ctx.createGain(); master.gain.setValueAtTime(0.0001,now); master.gain.exponentialRampToValueAtTime(0.22,now+0.02); master.gain.exponentialRampToValueAtTime(0.0001,now+0.5); master.connect(ctx.destination); [988,1480].forEach((freq,i)=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type="square"; o.frequency.setValueAtTime(freq,now); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.18,now+0.015+i*0.05); g.gain.exponentialRampToValueAtTime(0.0001,now+0.22+i*0.08); o.connect(g); g.connect(master); o.start(now+i*0.05); o.stop(now+0.55); }); setTimeout(()=>{ try{ ctx.close(); }catch(e){} },700); }catch(e){} }
+    function undoLastSale(){ if(!lastSaleUndo) return notify("Nessuna vendita da annullare."); const {id,snapshot}=lastSaleUndo; const item=db.find(x=>x.id===id); if(!item){ lastSaleUndo=null; return notify("Oggetto non trovato."); } Object.assign(item,snapshot); lastSaleUndo=null; if(lastSaleUndoTimer){ clearTimeout(lastSaleUndoTimer); lastSaleUndoTimer=null; } try{ document.getElementById("celebrateModal").style.display="none"; }catch(e){} saveData(); notify("Vendita annullata · pezzo di nuovo in stock"); try{ renderWeeklyMissions(); }catch(e){} }
+    function setListedFilter(mode){ filterListedMode=mode; document.querySelectorAll(".listed-chip").forEach(c=>c.classList.toggle("on", c.getAttribute("data-mode")===mode)); if(currentStatusFilter==="stock"||currentStatusFilter==="ALL") renderApp(); else setStatusFilter("stock"); }
+    function toggleListed(id){ const item=db.find(x=>String(x.id)===String(id)); if(!item||item.s==="sold")return; item.listed=!item.listed; saveData(); notify(item.listed?"In vendita (listed)":"Non pubblicato"); }
+    function markPayoutReceived(id){ const item=db.find(x=>String(x.id)===String(id)); if(!item||item.s!=="sold")return; item.pendingPayout=false; saveData(); playSaleFeedback(); notify("Incasso registrato in cassa"); }
+    function getWeekId(d){ const date=d?new Date(d):new Date(); const t=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())); const dayNum=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-dayNum); const yearStart=new Date(Date.UTC(t.getUTCFullYear(),0,1)); const weekNo=Math.ceil((((t-yearStart)/86400000)+1)/7); return t.getUTCFullYear()+"-W"+String(weekNo).padStart(2,"0"); }
+    function parseItDate(dStr){ if(!dStr)return null; const p=String(dStr).split("/"); if(p.length!==3)return null; return new Date(+p[2], +p[1]-1, +p[0]); }
+    function isInCurrentWeek(dStr){ const d=parseItDate(dStr); if(!d||isNaN(d))return false; return getWeekId(d)===getWeekId(new Date()); }
+    function isInCurrentMonth(dStr){ const d=parseItDate(dStr); if(!d||isNaN(d))return false; const n=new Date(); return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear(); }
+    function weeklyMissionContext(){ let soldWeek=0,addedWeek=0,critSoldWeek=0; db.forEach(i=>{ if(i.s==="sold"&&isInCurrentWeek(i.soldDate||i.d)){ soldWeek++; try{ const a=parseItDate(i.d),b=parseItDate(i.soldDate||i.d); if(a&&b&&Math.round((b-a)/86400000)>=30) critSoldWeek++; }catch(e){} } if(isInCurrentWeek(i.d)) addedWeek++; }); let backupWeek=0; try{ const ts=parseInt(localStorage.getItem(LAST_BACKUP_KEY)||"0",10)||0; if(ts&&(Date.now()-ts)<7*86400000) backupWeek=1; }catch(e){} return {soldWeek,addedWeek,critSoldWeek,backupWeek}; }
+    function renderWeeklyMissions(){ const box=document.getElementById("weeklyMissionsList"); if(!box)return; const ctx=weeklyMissionContext(); const defs=[{title:"Chiudi 1 vendita",target:1,p:ctx.soldWeek},{title:"Aggiungi 2 oggetti",target:2,p:ctx.addedWeek},{title:"Backup con foto",target:1,p:ctx.backupWeek},{title:"Vendi 1 pezzo critico (30+ gg)",target:1,p:ctx.critSoldWeek}]; box.innerHTML=defs.map(m=>{ const p=Math.min(m.target,m.p||0); const done=p>=m.target; return `<div class="mission-row${done?" done":""}"><span>${done?"✅ ":"▫️ "}${m.title}</span><span class="mission-prog">${p}/${m.target}</span></div>`; }).join(""); }
+    function periodStats(filterFn){ let sales=0,profit=0,count=0,expensesSum=0; db.forEach(i=>{ if(i.s!=="sold")return; const d=i.soldDate||i.d; if(!filterFn(d))return; count++; sales+=parseFloat(i.sp)||0; profit+=getItemNetProfit(i); }); expenses.forEach(e=>{ if(filterFn(e.date)) expensesSum+=parseFloat(e.amount)||0; }); return {sales,profit,count,expensesSum,net:profit-expensesSum}; }
+    function fillPeriodGrid(id,st){ const el=document.getElementById(id); if(!el)return; const cell=(l,v)=>`<div class="ps-item"><div class="ps-l">${l}</div><div class="ps-v">${v}</div></div>`; el.innerHTML=[cell("Vendite",st.count),cell("Incassato","€"+st.sales.toFixed(2).replace(".",",")),cell("Netto pezzi","€"+st.profit.toFixed(2).replace(".",",")),cell("Dopo spese","€"+st.net.toFixed(2).replace(".",","))].join(""); }
+    function renderPeriodSummaries(){ fillPeriodGrid("weekSummaryGrid", periodStats(isInCurrentWeek)); fillPeriodGrid("monthSummaryGrid", periodStats(isInCurrentMonth)); }
+
     function emptyStateHtml(ico, title, sub, btnLabel, btnOnclick) {
       const btn = btnLabel ? `<button type="button" onclick="${btnOnclick}">${btnLabel}</button>` : "";
       return `<div class="empty-state"><div class="empty-ico">${ico}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div>${btn}</div>`;
@@ -2651,9 +2519,9 @@
     }
 
 
-    const TROPHY_XP_KEY = "cantareal_trophy_xp_v1";
-    const TROPHY_CLAIMED_KEY = "cantareal_trophy_claimed_v1";
-    const TROPHY_OPEN_SEC_KEY = "cantareal_trophy_open_sec";
+    const TROPHY_XP_KEY = "resell_king_trophy_xp_v1";
+    const TROPHY_CLAIMED_KEY = "resell_king_trophy_claimed_v1";
+    const TROPHY_OPEN_SEC_KEY = "resell_king_trophy_open_sec";
 
     const LEVEL_TITLES = [
       [1, "Avvio"], [3, "Novizio"], [5, "Rivenditore"], [8, "Flipper"],
@@ -3210,8 +3078,8 @@
 
     function openAddExpenseModal() {
       document.getElementById("expEditId").value = "";
-      document.getElementById("expModalTitle").innerText = "💸 Nuova Spesa Extra";
-      document.getElementById("expSaveBtn").innerText = "Registra Spesa Extra";
+      const mt = document.getElementById("expModalTitle"); if (mt) mt.innerText = "💸 Nuova Spesa Extra";
+      const sb = document.getElementById("expSaveBtn"); if (sb) sb.innerText = "Registra Spesa Extra";
       document.getElementById("expDate").valueAsDate = new Date();
       document.getElementById("expAmount").value = "";
       document.getElementById("expNote").value = "";
@@ -3222,8 +3090,8 @@
       const e = expenses.find(x => String(x.id) === String(id));
       if (!e) return;
       document.getElementById("expEditId").value = e.id;
-      document.getElementById("expModalTitle").innerText = "💸 Modifica Spesa";
-      document.getElementById("expSaveBtn").innerText = "Salva modifiche";
+      const mt = document.getElementById("expModalTitle"); if (mt) mt.innerText = "💸 Modifica Spesa";
+      const sb = document.getElementById("expSaveBtn"); if (sb) sb.innerText = "Salva modifiche";
       document.getElementById("expAmount").value = e.amount;
       document.getElementById("expCategory").value = e.category;
       document.getElementById("expNote").value = e.note || "";
@@ -3238,26 +3106,18 @@
     function saveExpense() {
       const amount = parseFloat(document.getElementById("expAmount").value.replace(",", "."));
       if (isNaN(amount) || amount <= 0) return notify("Inserisci un importo valido.");
+      const dateInput = document.getElementById("expDate").value;
+      let d = todayFormatted();
+      if (dateInput) { const p = dateInput.split("-"); d = p[2] + "/" + p[1] + "/" + p[0]; }
       const category = document.getElementById("expCategory").value;
-      const note = document.getElementById("expNote").value.trim() || "Spesa generica";
-      const d = document.getElementById("expDate").value
-        ? document.getElementById("expDate").value.split("-").reverse().join("/")
-        : todayFormatted();
+      const note = (document.getElementById("expNote").value || "").trim() || "Spesa generica";
       const editId = document.getElementById("expEditId").value;
       if (editId) {
         const exp = expenses.find(x => String(x.id) === String(editId));
-        if (exp) {
-          exp.amount = amount; exp.category = category; exp.note = note; exp.date = d;
-          saveData();
-          closeModal("addExpenseModal");
-          notify("Spesa aggiornata");
-          return;
-        }
+        if (exp) { exp.amount = amount; exp.category = category; exp.note = note; exp.date = d; saveData(); closeModal("addExpenseModal"); notify("Spesa aggiornata"); return; }
       }
-      expenses.unshift({ id: String(Date.now()), amount: amount, category: category, note: note, date: d });
-      saveData();
-      closeModal("addExpenseModal");
-      notify("Spesa registrata");
+      expenses.unshift({ id: String(Date.now()), amount, category, note, date: d });
+      saveData(); closeModal("addExpenseModal"); notify("Spesa registrata");
     }
 
     function deleteExpense(id) {
@@ -3299,7 +3159,7 @@
         const bp = parseFloat(item.bp) || 0;
         const sp = parseFloat(item.sp) || 0;
         currentInvested += bp;
-        if (item.s === "sold") currentSalesRevenue += sp;
+        if (item.s === "sold" && !item.pendingPayout) currentSalesRevenue += sp;
       });
       expenses.forEach(e => { totalExpensesSum += parseFloat(e.amount) || 0; });
       const deltaRev = currentSalesRevenue - initialBaseHash.salesRevenue;
@@ -3393,7 +3253,7 @@
         } else if (item.s === "sold") {
           const profit = getItemNetProfit(item);
           totalSalesProfit += profit;
-          currentSalesRevenue += sp - (parseFloat(item.fee) || 0);
+          if (!item.pendingPayout) currentSalesRevenue += sp - (parseFloat(item.fee) || 0);
           soldCount++;
           const sd = item.soldDate || item.d;
           if (sd && sd.endsWith(currentMMYYYY)) {
@@ -3545,7 +3405,10 @@
           if (filterCriticalOnly) matchStockAge = d >= 30;
           if (filterFreshOnly) matchStockAge = d <= 7;
         }
-        return matchSearch && matchCat && matchPlat && matchStatus && matchMonth && matchStockAge;
+        let matchListed = true;
+        if (item.s === "stock" && filterListedMode === "listed") matchListed = !!item.listed;
+        if (item.s === "stock" && filterListedMode === "unlisted") matchListed = !item.listed;
+        return matchSearch && matchCat && matchPlat && matchStatus && matchMonth && matchStockAge && matchListed;
       });
 
       const getROI = i => i.bp > 0 ? (getItemNetProfit(i) / i.bp) : ((i.sp||0) > 0 ? 9999 : 0);
@@ -3648,9 +3511,13 @@
             ${item.n ? `<div class="item-notes">📝 ${esc(item.n)}</div>` : ""}
             <div class="item-meta">
               <span class="badge ${isSold ? "badge-sold" : "badge-stock"}">${isSold ? "✅ Venduto" : "STOCK"}</span>
+              ${!isSold && item.listed ? '<span class="badge-listed">In vendita</span>' : ""}
+              ${isSold && item.pendingPayout ? '<span class="badge-pending">In attesa</span>' : ""}
               ${srcBadge} ${esc(item.c)} • ${bpText} (${esc(item.d)})
               ${!isSold ? `<br><span class="days-tag" style="color:${days > 30 ? 'var(--danger-color)' : (days >= 15 ? 'var(--warn-color)' : 'var(--success-color)')}">⏳ In stock da ${days} giorni</span>` : ""}
+              ${!isSold ? `<br><button type="button" onclick="event.stopPropagation();toggleListed('${item.id}')" style="margin-top:4px;font-size:0.7rem;font-weight:800;border:1px solid var(--border-color);background:var(--input-bg);color:var(--text-color);border-radius:8px;padding:4px 8px;cursor:pointer;">${item.listed ? "Togli da In vendita" : "Segna In vendita"}</button>` : ""}
               ${isSold ? `<br>Vend: €${sp.toFixed(2)} ${soldPlatBadge} (${esc(item.soldDate||"-")}) ${roiHtml}` : ""}
+              ${isSold && item.pendingPayout ? `<br><button type="button" onclick="event.stopPropagation();markPayoutReceived('${item.id}')" style="margin-top:4px;font-size:0.72rem;font-weight:800;border:none;background:linear-gradient(145deg,#fbbf24,#d97706);color:#1c1917;border-radius:8px;padding:6px 10px;cursor:pointer;">Segna incassato</button>` : ""}
             </div>
           </div>
           <div class="arrow-icon" style="color:var(--text-muted);font-size:1.2rem;">➔</div>
@@ -3739,28 +3606,19 @@
     }
 
     function renderCharts() {
+      try { renderPeriodSummaries(); } catch (e) {}
+      try { renderWeeklyMissions(); } catch (e) {}
       const locked = getLockedCapital();
-      const elL = document.getElementById("statsLockedVal");
-      const elLS = document.getElementById("statsLockedSub");
-      if (elL) elL.textContent = "€" + locked.sum.toFixed(2).replace(".", ",");
-      if (elLS) elLS.textContent = locked.n + " pezzi fermi da 30+ giorni · tap per aprirli";
-      let feeSum = 0, roiAcc = 0, roiN = 0, dayAcc = 0, dayN = 0;
-      db.forEach(i => {
-        if (i.s !== "sold") return;
-        feeSum += parseFloat(i.fee) || 0;
-        const bp = parseFloat(i.bp) || 0;
-        const profit = getItemNetProfit(i);
-        if (bp > 0) { roiAcc += (profit / bp) * 100; roiN++; }
-        const d1 = daysInStock(i);
-        if (d1 > 0) { dayAcc += d1; dayN++; }
-      });
-      const elF = document.getElementById("statsFeesVal");
-      const elR = document.getElementById("statsRoiVal");
-      const elD = document.getElementById("statsDaysVal");
-      if (elF) elF.textContent = "€" + feeSum.toFixed(2).replace(".", ",");
-      if (elR) elR.textContent = roiN ? ((roiAcc / roiN).toFixed(0) + "%") : "—";
-      if (elD) elD.textContent = dayN ? (Math.round(dayAcc / dayN) + " gg") : "—";
-
+      const pending = getPendingBalance();
+      const setTxt = (id, t) => { const el = document.getElementById(id); if (el) el.textContent = t; };
+      setTxt("statsLockedVal", "€" + locked.sum.toFixed(2).replace(".", ","));
+      setTxt("statsLockedSub", locked.n + " pezzi · tap per aprirli");
+      setTxt("statsPendingVal", "€" + pending.sum.toFixed(2).replace(".", ","));
+      setTxt("statsPendingSub", pending.n ? (pending.n + " vendite da incassare") : "nessun importo in attesa");
+      let feeSum = 0, roiAcc = 0, roiN = 0;
+      db.forEach(i => { if (i.s !== "sold") return; feeSum += parseFloat(i.fee) || 0; const bp = parseFloat(i.bp) || 0; if (bp > 0) { roiAcc += (getItemNetProfit(i) / bp) * 100; roiN++; } });
+      setTxt("statsFeesVal", "€" + feeSum.toFixed(2).replace(".", ","));
+      setTxt("statsRoiVal", roiN ? (Math.round(roiAcc / roiN) + "%") : "—");
       const css = getComputedStyle(document.documentElement);
       const textColor = css.getPropertyValue("--text-color").trim();
       const gridColor = css.getPropertyValue("--border-color").trim();
@@ -4099,18 +3957,8 @@
       document.getElementById("sheetItemTitle").innerText = item.t;
       document.getElementById("sheetSellPrice").value = item.sp > 0 ? item.sp : "";
       document.getElementById("sheetSellFee").value = item.fee > 0 ? item.fee : "";
+      const payCb = document.getElementById("sheetPayoutReceived"); if (payCb) payCb.checked = true;
       document.getElementById("sellSheet").classList.remove("hidden");
-    }
-
-    function applyPlatformFeeHint(platform) {
-      const feeInput = document.getElementById("sheetSellFee");
-      if (!feeInput) return;
-      // Prefill only if empty / zero
-      const cur = parseFloat(String(feeInput.value).replace(",", ".")) || 0;
-      if (!feeInput.value || cur === 0) {
-        const sug = suggestedFeeFor(platform);
-        feeInput.value = sug ? String(sug) : "0";
-      }
     }
 
     function closeSellSheet() {
@@ -4124,23 +3972,20 @@
       const feeVal = document.getElementById("sheetSellFee").value.replace(",", ".") || "0";
       const price = parseFloat(priceVal);
       const fee = parseFloat(feeVal) || 0;
-
+      const received = !!(document.getElementById("sheetPayoutReceived") && document.getElementById("sheetPayoutReceived").checked);
       if (isNaN(price) || price <= 0) return notify("Inserisci un prezzo valido.");
       const item = db.find(x => x.id === activeSheetItemId);
       if (item) {
-        const snapshot = {
-          s: item.s, sp: item.sp, fee: item.fee,
-          soldPlatform: item.soldPlatform || "", soldDate: item.soldDate || ""
-        };
+        const snapshot = { s: item.s, sp: item.sp, fee: item.fee, soldPlatform: item.soldPlatform||"", soldDate: item.soldDate||"", pendingPayout: !!item.pendingPayout, listed: !!item.listed };
         item.s = "sold"; item.sp = price; item.fee = fee; item.soldPlatform = platform; item.soldDate = todayFormatted();
+        item.pendingPayout = !received; item.listed = false;
         rememberFee(platform, fee);
         lastSaleUndo = { id: item.id, snapshot };
         if (lastSaleUndoTimer) clearTimeout(lastSaleUndoTimer);
         lastSaleUndoTimer = setTimeout(() => { lastSaleUndo = null; }, 15000);
-        saveData();
-        closeSellSheet();
-        showCelebrationModal(item);
-        notify("Venduto: " + item.t, "Annulla", undoLastSale);
+        saveData(); closeSellSheet(); playSaleFeedback(); showCelebrationModal(item);
+        notify(item.pendingPayout ? ("Venduto · in attesa: " + item.t) : ("Venduto: " + item.t), "Annulla", undoLastSale);
+        try { renderWeeklyMissions(); } catch (e) {}
       }
     }
 
@@ -4475,6 +4320,7 @@
       } catch (e) {}
       refreshAllCategorySelects();
       updateBackupReminders();
+      try { renderWeeklyMissions(); } catch (e) {}
       renderApp();
       try { showWelcomeIfNeeded(); } catch (e) {}
     });
